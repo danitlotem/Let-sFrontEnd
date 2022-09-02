@@ -9,16 +9,18 @@ import axios from 'axios';
 import UpperBar from '../Components/UpperBar';
 import {useSelector, useDispatch} from 'react-redux';
 import {setNotificatation} from '../store/Slices/generalSlice';
+import {getCurrentPath} from '../utils/generalFunctions';
 
 const Notifications = () => {
   const userConfig = useSelector(state => state.configuration.userConfig);
   const notifications = useSelector(state => state.general.myNotification);
   const dispatch = useDispatch();
+  const path = getCurrentPath();
 
   const showNotifications = async userNum => {
     try {
       const res = await axios.get(
-        `http://192.168.1.101:3000/notifications/${userConfig.user_id}`,
+        `${path}/notifications/${userConfig.user_id}`,
       );
       dispatch(setNotificatation({myNotification: res.data}));
     } catch (error) {

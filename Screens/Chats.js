@@ -9,8 +9,9 @@ import UpperBar from '../Components/UpperBar';
 import axios from 'axios';
 import {useSelector, useDispatch} from 'react-redux';
 import {openChats} from '../store/Slices/chatSlice';
-import {shouldRasterizeIOS} from 'deprecated-react-native-prop-types/DeprecatedViewPropTypes';
+import {getCurrentPath} from '../utils/generalFunctions';
 const Chat = () => {
+  const path = getCurrentPath();
   const myUserId = useSelector(state => state.configuration.userConfig.user_id);
   const chats = useSelector(state => state.chat.OpenChats);
   const dispatch = useDispatch();
@@ -18,9 +19,7 @@ const Chat = () => {
   const getAllChats = async () => {
     //FIX ME there is a problem with update list of open chats
     try {
-      const res = await axios.get(
-        `http://192.168.1.101:3000/chats/${myUserId}`,
-      );
+      const res = await axios.get(`${path}/chats/${myUserId}`);
       dispatch(openChats({OpenChats: res.data}));
     } catch (error) {
       alert(error);

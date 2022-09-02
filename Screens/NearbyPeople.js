@@ -13,8 +13,10 @@ import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
 import {updateNearbyPeople} from '../store/Slices/peopleSlice';
 import StatusModal from '../Components/StatusModal';
+import {getCurrentPath} from '../utils/generalFunctions';
 
 const NearbyPeople = ({navigation}) => {
+  const path = getCurrentPath();
   const hideModal = () => setVisible(false);
   const [visible, setVisible] = useState(true);
   const userConfig = useSelector(state => state.configuration.userConfig);
@@ -29,7 +31,7 @@ const NearbyPeople = ({navigation}) => {
   const onApplyHandler = async () => {
     try {
       const people = await axios.post(
-        `http://192.168.1.101:3000/filters/${user_id}/${
+        `${path}/filters/${user_id}/${
           filters.online_filter === true ? '1' : '0'
         }`,
         filters,
@@ -47,9 +49,7 @@ const NearbyPeople = ({navigation}) => {
 
   const onFriendRequest = async userNum => {
     try {
-      await axios.post(
-        `http://192.168.1.101:3000/friendRequest/send/${user_id}/${userNum}`,
-      );
+      await axios.post(`${path}/friendRequest/send/${user_id}/${userNum}`);
       onApplyHandler(); //FIX ME?
     } catch (error) {
       alert(error);

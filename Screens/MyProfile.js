@@ -21,8 +21,9 @@ import UpperBar from '../Components/UpperBar';
 import Theme from '../Styles/Theme';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
+import {getCurrentPath} from '../utils/generalFunctions';
 const MyProfile = () => {
+  const path = getCurrentPath();
   const [edit, setEdit] = useState(false);
   const [photos, setPhotos] = useState([]);
   const email = useSelector(state => state.configuration.email);
@@ -42,9 +43,7 @@ const MyProfile = () => {
 
   const getPhotos = async () => {
     try {
-      const res = await axios.get(
-        `http://192.168.1.101:3000/userPictures/${userConfig.user_id}`,
-      );
+      const res = await axios.get(`${path}/userPictures/${userConfig.user_id}`);
       setPhotos(res.data);
     } catch (error) {
       alert(error);

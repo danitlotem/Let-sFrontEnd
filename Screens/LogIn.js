@@ -5,7 +5,7 @@
 // eslint-disable-next-line no-unused-vars
 import React, {useState, useEffect} from 'react';
 import {View, Text, Pressable} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import styles from '../Styles/LogInStyle';
 import axios from 'axios';
 import TInput from '../Components/TInput';
@@ -15,8 +15,9 @@ import {
   updateDetails,
   clearSignUpConfig,
 } from '../store/Slices/configurationSlice';
-
+import {getCurrentPath} from '../utils/generalFunctions';
 const LogIn = ({navigation}) => {
+  const path = getCurrentPath();
   const [email, setEmail] = useState('');
   const [deviceToken, setDeviceToken] = useState('');
   const [password, setPassword] = useState('');
@@ -26,7 +27,6 @@ const LogIn = ({navigation}) => {
     const fcmtoken = await AsyncStorage.getItem('fcmtoken');
     setDeviceToken(fcmtoken);
   };
-  const signUpConfig = useSelector(state => state.configuration.signUpConfig);
 
   useEffect(() => {
     getFcmToken();
@@ -48,21 +48,18 @@ const LogIn = ({navigation}) => {
 
   const onSubmitFormHandler = async () => {
     try {
-      const response = await axios.post(
-        `http://192.168.1.101:3000/auth/login`,
-        {
-          email: email,
-          password: password,
-          device_token: deviceToken,
-        },
-      );
+      const response = await axios.post(`${path}/auth/login`, {
+        email: email,
+        password: password,
+        device_token: deviceToken,
+      });
 
       if (response.data.hasOwnProperty('msg')) {
         alert(response.data.msg);
       } else {
         try {
           const getUser = await axios.get(
-            `http://192.168.1.101:3000/userConfiguration/${response.data.user_id}`,
+            `${path}/userConfiguration/${response.data.user_id}`,
             {
               headers: {
                 Authorization: 'Bearer ' + response.data.token,

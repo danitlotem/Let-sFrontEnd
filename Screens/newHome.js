@@ -15,10 +15,12 @@ import {updateFilters} from '../store/Slices/configurationSlice';
 import {updateUsersBySearchModes} from '../store/Slices/peopleSlice';
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {getCurrentPath} from '../utils/generalFunctions';
 
 const Home = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  const path = getCurrentPath();
 
   const myLongitude = useSelector(state => state.general.myLongitude);
   const myLatitude = useSelector(state => state.general.myLatitude);
@@ -42,7 +44,7 @@ const Home = () => {
   const getUsersBySearchModes = async () => {
     try {
       const usersBySearchModes = await axios.get(
-        `http://192.168.1.101:3000/dataFromSetsToClient/experience/${myUserId}`,
+        `${path}/dataFromSetsToClient/experience/${myUserId}`,
       );
       dispatch(
         updateUsersBySearchModes({usersBySearchModes: usersBySearchModes.data}),

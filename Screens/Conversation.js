@@ -15,6 +15,7 @@ import {
   Keyboard,
   Image,
 } from 'react-native';
+import {getCurrentPath} from '../utils/generalFunctions';
 
 import MessageForm from '../Components/Chat/MessageForm';
 import MyMessage from '../Components/Chat/MyMessage';
@@ -27,6 +28,8 @@ import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import {useNavigation} from '@react-navigation/native';
 
 const Conversation = ({route}) => {
+  const path = getCurrentPath();
+
   const navigation = useNavigation();
   const friendId = route.params.friendConfig.user_id;
   const friendImage = route.params.friendConfig.image;
@@ -38,9 +41,7 @@ const Conversation = ({route}) => {
   const getMessages = async () => {
     //FIX ME there is a problem with update list of open chats
     try {
-      const res = await axios.get(
-        `http://192.168.1.101:3000/chats/${myId}/${friendId}/0`,
-      );
+      const res = await axios.get(`${path}/chats/${myId}/${friendId}/0`);
       if (res.data.hasOwnProperty('msg')) {
         dispatch(
           setCurrentChat({

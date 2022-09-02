@@ -20,8 +20,9 @@ import PendingFriendRequests from '../Components/PendingFriendRequests';
 import MyFriendRequests from '../Components/MyFriendRequests';
 import UpperBar from '../Components/UpperBar';
 import {updateMyFriends, searchFriend} from '../store/Slices/peopleSlice';
-
+import {getCurrentPath} from '../utils/generalFunctions';
 const MyFriends = () => {
+  const path = getCurrentPath();
   const [friendName, setFriendName] = useState(friendToSearch);
   const [visibleMyRequests, setVisibleMyRequests] = useState(false);
   const [visiblePendingRequests, setVisiblePendingRequests] = useState(false);
@@ -34,7 +35,7 @@ const MyFriends = () => {
     try {
       const valToSearch = friendToSearch === '' ? '%20' : friendToSearch;
       const friends = await axios.get(
-        `http://192.168.1.101:3000/friendRequest/byName/${userConfig.user_id}/1/${valToSearch}`,
+        `${path}:3000/friendRequest/byName/${userConfig.user_id}/1/${valToSearch}`,
       );
       dispatch(
         updateMyFriends({

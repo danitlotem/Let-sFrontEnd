@@ -11,15 +11,16 @@ import axios from 'axios';
 import {useSelector, useDispatch} from 'react-redux';
 import {updateDetails} from '../../store/Slices/configurationSlice';
 import {updateConfiguration} from '../../store/Slices/configurationSlice';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {updateHobbies} from '../../store/Slices/configurationSlice';
 import {
   Collapse,
   CollapseHeader,
   CollapseBody,
 } from 'accordion-collapse-react-native';
+import {getCurrentPath} from '../../utils/generalFunctions';
 
 const SignUp3 = ({route, navigation}) => {
+  const path = getCurrentPath();
   const dispatch = useDispatch();
   const myHobbies = useSelector(state => state.configuration.myHobbies);
   const hobbies = useSelector(state => state.general.rawText.Hobbies);
@@ -60,10 +61,7 @@ const SignUp3 = ({route, navigation}) => {
   };
   const AddUserToDB = async event => {
     try {
-      const response = await axios.post(
-        'http://192.168.1.101:3000/auth/register',
-        signUpConfig,
-      );
+      const response = await axios.post(`${path}/auth/register`, signUpConfig);
       if (response.data.hasOwnProperty('msg')) {
         alert(response.data.msg);
       } else {
@@ -76,23 +74,6 @@ const SignUp3 = ({route, navigation}) => {
         console.log('response.data:', response.data);
         console.log('TEst:', loginDetails);
         dispatch(updateDetails(loginDetails));
-
-        // const getUser = await axios.get(
-        //   `http://192.168.1.101:3000/userConfiguration/${response.data.user_id}`,
-        //   {
-        //     headers: {
-        //       Authorization: 'Bearer ' + response.data.token,
-        //     },
-        //   },
-        // );
-        // dispatch(
-        //   updateDetails({
-        //     userConfig: getUser.data[0],
-        //     email: response.data.email,
-        //     fullName: `${getUser.data[0].first_name} ${getUser.data[0].last_name}`,
-        //     token: response.data.token,
-        //   }),
-        // );
       }
     } catch (error) {
       alert(error);
