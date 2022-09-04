@@ -9,6 +9,7 @@ import {View, TextInput, Pressable, Modal, Text} from 'react-native';
 import axios from 'axios';
 import styles from '../Styles/StatusModal';
 import Theme from '../Styles/Theme';
+import {getCurrentPath} from '../utils/generalFunctions';
 //FIX ME
 //! maybe turn the opacity into a button include the featurs
 
@@ -17,13 +18,12 @@ const StatusModal = props => {
   const [myStatus, setStatus] = useState('enter your status...');
   const dispatch = useDispatch();
   const user_id = useSelector(state => state.configuration.userConfig.user_id);
-
+  const path = getCurrentPath();
   const updateStatus = async () => {
     try {
-      const res = await axios.post(
-        `http://192.168.1.101:3000/userStatus/${user_id}`, //NOTICE: use this url or another?
-        {status: myStatus},
-      );
+      const res = await axios.post(`${path}/userStatus/${user_id}`, {
+        status: myStatus,
+      });
       dispatch(updateMyStatus({status: myStatus}));
     } catch (err) {
       alert(err);

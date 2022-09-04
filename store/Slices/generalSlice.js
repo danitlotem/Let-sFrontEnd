@@ -14,7 +14,7 @@ export const generalSlice = createSlice({
   initialState,
   reducers: {
     getRawText: (state, action) => {
-      state.rawText = action.payload.rawText;
+      state.rawText = {...action.payload.rawText};
       console.log('in state setRaw');
     },
     setNotificatation: (state, action) => {

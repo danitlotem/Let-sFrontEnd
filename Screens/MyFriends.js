@@ -30,12 +30,18 @@ const MyFriends = () => {
   const listOfConf = useSelector(state => state.people.myFriends);
   const friendToSearch = useSelector(state => state.people.friendToSearch);
   const dispatch = useDispatch();
+  const verifyToken = useSelector(state => state.configuration.token);
 
   const FindFriend = async () => {
     try {
       const valToSearch = friendToSearch === '' ? '%20' : friendToSearch;
       const friends = await axios.get(
-        `${path}:3000/friendRequest/byName/${userConfig.user_id}/1/${valToSearch}`,
+        `${path}/friendRequest/byName/${userConfig.user_id}/1/${valToSearch}`,
+        {
+          headers: {
+            Authorization: 'Bearer ' + verifyToken,
+          },
+        },
       );
       dispatch(
         updateMyFriends({

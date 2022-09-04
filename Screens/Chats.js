@@ -13,13 +13,18 @@ import {getCurrentPath} from '../utils/generalFunctions';
 const Chat = () => {
   const path = getCurrentPath();
   const myUserId = useSelector(state => state.configuration.userConfig.user_id);
+  const verifyToken = useSelector(state => state.configuration.token);
   const chats = useSelector(state => state.chat.OpenChats);
   const dispatch = useDispatch();
 
   const getAllChats = async () => {
     //FIX ME there is a problem with update list of open chats
     try {
-      const res = await axios.get(`${path}/chats/${myUserId}`);
+      const res = await axios.get(`${path}/chats/${myUserId}`, {
+        headers: {
+          Authorization: 'Bearer ' + verifyToken,
+        },
+      });
       dispatch(openChats({OpenChats: res.data}));
     } catch (error) {
       alert(error);

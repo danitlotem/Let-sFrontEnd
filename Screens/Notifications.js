@@ -16,11 +16,17 @@ const Notifications = () => {
   const notifications = useSelector(state => state.general.myNotification);
   const dispatch = useDispatch();
   const path = getCurrentPath();
+  const verifyToken = useSelector(state => state.configuration.token);
 
   const showNotifications = async userNum => {
     try {
       const res = await axios.get(
         `${path}/notifications/${userConfig.user_id}`,
+        {
+          headers: {
+            Authorization: 'Bearer ' + verifyToken,
+          },
+        },
       );
       dispatch(setNotificatation({myNotification: res.data}));
     } catch (error) {

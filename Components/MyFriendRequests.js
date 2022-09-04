@@ -8,17 +8,15 @@ import {View, Text, Pressable, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
 import axios from 'axios';
 import UserItem from '../Components/userItem';
-
+import {getCurrentPath} from '../utils/generalFunctions';
 const MyFriendRequests = props => {
   const [listOfConf, setlistOfConf] = useState([]);
   const userConfig = useSelector(state => state.configuration.userConfig);
   const user_id = userConfig.user_id;
-
+  const path = getCurrentPath();
   const onAccept = async userNum => {
     try {
-      await axios.post(
-        `http://192.168.1.101:3000/friendRequest/approve/${user_id}/${userNum}`,
-      );
+      await axios.post(`${path}/friendRequest/approve/${user_id}/${userNum}`);
       getMyFriendRequest(); //FIX ME
     } catch (error) {
       alert(error);
@@ -28,7 +26,7 @@ const MyFriendRequests = props => {
   const getMyFriendRequest = async () => {
     try {
       const friends = await axios.get(
-        `http://192.168.1.101:3000/friendRequest/receivedRequests/${user_id}`,
+        `${path}/friendRequest/receivedRequests/${user_id}`,
       );
       if (!friends.data.hasOwnProperty('msg')) {
         setlistOfConf([...friends.data]);

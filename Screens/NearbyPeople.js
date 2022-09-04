@@ -27,7 +27,7 @@ const NearbyPeople = ({navigation}) => {
   const showFilters = () => {
     navigation.openDrawer();
   };
-
+  const verifyToken = useSelector(state => state.configuration.token);
   const onApplyHandler = async () => {
     try {
       const people = await axios.post(
@@ -35,10 +35,17 @@ const NearbyPeople = ({navigation}) => {
           filters.online_filter === true ? '1' : '0'
         }`,
         filters,
+        {
+          headers: {
+            Authorization: 'Bearer ' + verifyToken,
+          },
+        },
       );
+      console.log('DATA:', JSON.stringify(people, null, 2));
       dispatch(updateNearbyPeople({nearbyPeople: people.data}));
     } catch (err) {
       alert(err);
+      console.log(err);
     }
   };
 
@@ -49,7 +56,11 @@ const NearbyPeople = ({navigation}) => {
 
   const onFriendRequest = async userNum => {
     try {
-      await axios.post(`${path}/friendRequest/send/${user_id}/${userNum}`);
+      await axios.post(`${path}/friendRequest/send/${user_id}/${userNum}`, {
+        headers: {
+          Authorization: 'Bearer ' + verifyToken,
+        },
+      });
       onApplyHandler(); //FIX ME?
     } catch (error) {
       alert(error);

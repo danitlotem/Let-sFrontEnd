@@ -36,12 +36,17 @@ const Conversation = ({route}) => {
   const friendName = `${route.params.friendConfig.first_name} ${route.params.friendConfig.last_name}`;
   const myId = useSelector(state => state.configuration.userConfig.user_id);
   const messages = useSelector(state => state.chat.currChat);
+  const verifyToken = useSelector(state => state.configuration.token);
 
   const dispatch = useDispatch();
   const getMessages = async () => {
     //FIX ME there is a problem with update list of open chats
     try {
-      const res = await axios.get(`${path}/chats/${myId}/${friendId}/0`);
+      const res = await axios.get(`${path}/chats/${myId}/${friendId}/0`, {
+        headers: {
+          Authorization: 'Bearer ' + verifyToken,
+        },
+      });
       if (res.data.hasOwnProperty('msg')) {
         dispatch(
           setCurrentChat({

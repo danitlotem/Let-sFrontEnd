@@ -25,8 +25,10 @@ const Home = () => {
   const myLongitude = useSelector(state => state.general.myLongitude);
   const myLatitude = useSelector(state => state.general.myLatitude);
   const text = useSelector(state => state.general.rawText);
-  const data = text?.filters.Search_Mode;
+  console.log(text);
+  const data = useSelector(state => state.general.rawText.filters.Search_Mode);
   const myUserId = useSelector(state => state.configuration.userConfig.user_id);
+  const verifyToken = useSelector(state => state.configuration.token);
   const users = useSelector(state => state.people.usersBySearchModes);
   const HobText = text['Search Mode Sentences'];
 
@@ -45,6 +47,11 @@ const Home = () => {
     try {
       const usersBySearchModes = await axios.get(
         `${path}/dataFromSetsToClient/experience/${myUserId}`,
+        {
+          headers: {
+            Authorization: 'Bearer ' + verifyToken,
+          },
+        },
       );
       dispatch(
         updateUsersBySearchModes({usersBySearchModes: usersBySearchModes.data}),

@@ -2,13 +2,13 @@
 import {eventChannel} from 'redux-saga';
 import {select, call, take, put} from 'redux-saga/effects';
 import {newMessageWaiting, addMessageToChat} from '../store/Slices/chatSlice';
-
+import {getCurrentSocketPath} from './generalFunctions';
 const getToken = state => state.configuration.token;
 const getMyID = state => state.configuration.userConfig.user_id;
-
+const path = getCurrentSocketPath();
 function socketService(token) {
   return eventChannel(emitter => {
-    const socket = new WebSocket('ws://192.168.1.101:3000', null, {
+    const socket = new WebSocket(`${path}`, null, {
       headers: {
         authorization: 'Bearer ' + token,
       },

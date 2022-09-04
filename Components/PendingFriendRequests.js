@@ -7,15 +7,16 @@ import {View, Text, Pressable, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
 import axios from 'axios';
 import UserItem from '../Components/userItem';
-
+import {getCurrentPath} from '../utils/generalFunctions';
 const PendingFriendRequests = props => {
   const userId = useSelector(state => state.configuration.userConfig.user_id);
   const [listOfConf, setlistOfConf] = useState([]);
+  const path = getCurrentPath();
 
   const getMyFriendRequest = async () => {
     try {
       const friends = await axios.get(
-        `http://192.168.1.101:3000/friendRequest/sendRequests/${userId}`,
+        `${path}/friendRequest/sendRequests/${userId}`,
       );
       if (!friends.data.hasOwnProperty('msg')) {
         setlistOfConf([...friends.data]);
@@ -26,7 +27,7 @@ const PendingFriendRequests = props => {
   };
   useEffect(() => {
     getMyFriendRequest();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

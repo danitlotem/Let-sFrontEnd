@@ -1,17 +1,18 @@
 /* eslint-disable require-yield */
-import {put, all, call, take, fork} from 'redux-saga/effects';
+import {put, call, take, fork} from 'redux-saga/effects';
 import axios from 'axios';
 import {getRawText} from '../Slices/generalSlice';
 import {getCurrentLocationSaga} from '../../utils/location';
 import {watchSocket} from '../../utils/socket';
 import {changeStatus} from '../Slices/generalSlice';
-
+import {getCurrentPath} from '../../utils/generalFunctions';
 export function* helloApp() {
   console.log('WELCOME TO OUR APP!');
 }
 
 const getData = async () => {
-  return await axios.get(`http://192.168.1.101:3000/dataFromSetsToClient`);
+  const path = getCurrentPath();
+  return await axios.get(`${path}/dataFromSetsToClient`);
 };
 
 export function* getConstants() {
@@ -26,12 +27,11 @@ export function* getConstants() {
 
 export function* rootSaga() {
   console.log('---------------START---------------');
-  yield all([helloApp(), getConstants()]);
+  yield call(helloApp);
+  yield call(getConstants);
   console.log('-----------------');
-  // while (true) {
   yield take(changeStatus.type);
-
   yield fork(getCurrentLocationSaga);
-  yield fork(watchSocket); // //yield take(changeStatus.type);
+  yield fork(watchSocket);
   yield take(changeStatus.type);
 }

@@ -1,10 +1,11 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-useless-escape */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable no-alert */
 /* eslint-disable react/prop-types */
 // eslint-disable-next-line no-unused-vars
 import React, {useState, useEffect} from 'react';
-import {View, Text, Pressable} from 'react-native';
+import {View, Text, Pressable, Image} from 'react-native';
 import {useDispatch} from 'react-redux';
 import styles from '../Styles/LogInStyle';
 import axios from 'axios';
@@ -53,11 +54,11 @@ const LogIn = ({navigation}) => {
         password: password,
         device_token: deviceToken,
       });
-
       if (response.data.hasOwnProperty('msg')) {
         alert(response.data.msg);
       } else {
         try {
+          console.log('USER ID: ', response.data.user_id);
           const getUser = await axios.get(
             `${path}/userConfiguration/${response.data.user_id}`,
             {
@@ -66,6 +67,7 @@ const LogIn = ({navigation}) => {
               },
             },
           );
+          console.log('1');
           dispatch(
             updateDetails({
               userConfig: getUser.data[0],
@@ -92,7 +94,12 @@ const LogIn = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.LogInForm}>
-        <Text style={styles.FormItemText}>Welcome</Text>
+        <View style={{alignSelf: 'center', marginBottom: 30}}>
+          <Image
+            style={{height: 100, width: 250}}
+            source={require(`../assets/Images/LOGO.png`)}
+          />
+        </View>
         <TInput
           title={'Email'}
           value={email}

@@ -40,10 +40,18 @@ const MyProfile = () => {
   var day = parseInt(birthday[2].slice(0, 2)) + 1;
   year = year.toString();
   const [date, setDate] = useState(new Date(year, month, day));
+  const verifyToken = useSelector(state => state.configuration.token);
 
   const getPhotos = async () => {
     try {
-      const res = await axios.get(`${path}/userPictures/${userConfig.user_id}`);
+      const res = await axios.get(
+        `${path}/userPictures/${userConfig.user_id}`,
+        {
+          headers: {
+            Authorization: 'Bearer ' + verifyToken,
+          },
+        },
+      );
       setPhotos(res.data);
     } catch (error) {
       alert(error);

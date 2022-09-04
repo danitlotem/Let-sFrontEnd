@@ -9,9 +9,12 @@ import styles from '../../Styles/SignUpStyle';
 import Theme from '../../Styles/Theme';
 import axios from 'axios';
 import {useSelector, useDispatch} from 'react-redux';
-import {updateDetails} from '../../store/Slices/configurationSlice';
-import {updateConfiguration} from '../../store/Slices/configurationSlice';
-import {updateHobbies} from '../../store/Slices/configurationSlice';
+import {
+  updateUserId,
+  updateConfiguration,
+  updateHobbies,
+} from '../../store/Slices/configurationSlice';
+
 import {
   Collapse,
   CollapseHeader,
@@ -65,15 +68,15 @@ const SignUp3 = ({route, navigation}) => {
       if (response.data.hasOwnProperty('msg')) {
         alert(response.data.msg);
       } else {
-        let loginDetails = {
-          userConfig: response.data, //BUG!!!! response.data is status and not db
-          email: response.data.email,
-          fullName: `${response.data.first_name} ${response.data.last_name}`,
-          token: response.data.token,
-        };
+        // let loginDetails = {
+        //   userConfig: response.data, //BUG!!!! response.data is status and not db
+        //   email: response.data.email,
+        //   fullName: `${response.data.first_name} ${response.data.last_name}`,
+        //   token: response.data.token,
+        // };
         console.log('response.data:', response.data);
-        console.log('TEst:', loginDetails);
-        dispatch(updateDetails(loginDetails));
+        //dispatch(updateDetails(loginDetails));
+        dispatch(updateUserId({user_id: response.data.user_id}));
       }
     } catch (error) {
       alert(error);

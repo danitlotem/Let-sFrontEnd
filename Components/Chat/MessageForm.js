@@ -10,15 +10,18 @@ import axios from 'axios';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import TInput from '../TInput';
 import {addMessageToChat} from '../../store/Slices/chatSlice';
+import {getCurrentPath} from '../../utils/generalFunctions';
 const MessageForm = props => {
   const myUserId = useSelector(state => state.configuration.userConfig.user_id);
   const [message, setMessage] = useState('');
   const messages = useSelector(state => state.chat.currChat);
   const dispatch = useDispatch();
+  const path = getCurrentPath();
+
   const HandleSubmit = async () => {
     try {
       const myMessage = await axios.post(
-        `http://192.168.1.101:3000/messages/${myUserId}/${props.friendID}`,
+        `${path}/messages/${myUserId}/${props.friendID}`,
         {
           content: message,
         },

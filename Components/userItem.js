@@ -11,6 +11,7 @@ import Theme from '../Styles/Theme';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import UserProfile from '../Components/UserProfile';
+import {getCurrentPath} from '../utils/generalFunctions';
 
 const UserItem = props => {
   const [visible, setVisible] = useState(false);
@@ -20,7 +21,7 @@ const UserItem = props => {
   const myConfig = useSelector(state => state.configuration.userConfig);
   const navigation = useNavigation();
   const myStatus = config.user_status;
-
+  const path = getCurrentPath();
   const typeIcon = () => {
     if (props.type === 'notFriend')
       return (
@@ -93,9 +94,7 @@ const UserItem = props => {
   };
   const createNewChat = async () => {
     try {
-      await axios.post(
-        `http://192.168.1.101:3000/chats/${myConfig.user_id}/${config.user_id}`,
-      );
+      await axios.post(`${path}/chats/${myConfig.user_id}/${config.user_id}`);
     } catch {
       alert('in catch');
     }

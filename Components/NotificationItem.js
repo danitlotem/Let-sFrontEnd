@@ -6,11 +6,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import styles from '../Styles/NotificationStyle';
 import axios from 'axios';
 import Theme from '../Styles/Theme';
-
+import {getCurrentPath} from '../utils/generalFunctions';
 const NotificationItem = props => {
   console.log(props);
   const seen = props.details.seen;
   console.log(seen);
+  const path = getCurrentPath();
   const id = props.details.notification_id;
   return (
     <View
@@ -31,10 +32,7 @@ const NotificationItem = props => {
       <Pressable
         style={styles.Pressables}
         onPress={async () => {
-          console.log('****');
-          const res = await axios.put(
-            `http://192.168.1.101:3000/notifications/${id}`,
-          );
+          const res = await axios.put(`${path}/notifications/${id}`);
           console.log(res.data);
         }}>
         <Ionicons name="close-outline" size={35} color={'#0E6070'} />

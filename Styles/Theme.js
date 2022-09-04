@@ -1,7 +1,8 @@
 const Theme = {
   //backgroundColor: '#000729',
   backgroundColor: '#C0C0C0',
-  secondColor: '#31818A',
+  //secondColor: '#31818A',
+  secondColor: '#0F75BD',
   highLightColor: '#A4DBCC',
   //highLightColor: '#c4c3d0',
   //highLightColor: '#8DD9CC',

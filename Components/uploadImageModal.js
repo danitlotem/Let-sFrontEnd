@@ -10,13 +10,15 @@ import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
 import {updateMainPictuer} from '../store/Slices/configurationSlice';
 import Theme from '../Styles/Theme';
+import {getCurrentPath} from '../utils/generalFunctions';
+
 const UplaodImageModal = props => {
   const [image1, setImage1] = useState({});
   const [image2, setImage2] = useState({});
   const [image3, setImage3] = useState({});
   const conf = useSelector(state => state.configuration.userConfig);
-  console.log(conf);
   const dispatch = useDispatch();
+  const path = getCurrentPath();
 
   const pickImage = num => {
     launchImageLibrary(
@@ -41,13 +43,10 @@ const UplaodImageModal = props => {
   const uploadImage = async event => {
     try {
       if (image1 !== {}) {
-        await axios.post(
-          `http://192.168.1.101:3000/userPictures/${conf.user_id}`,
-          {
-            base64image: image1.base64,
-            main_image: '1',
-          },
-        );
+        await axios.post(`${path}/userPictures/${conf.user_id}`, {
+          base64image: image1.base64,
+          main_image: '1',
+        });
       }
       dispatch(
         updateMainPictuer({
@@ -56,22 +55,16 @@ const UplaodImageModal = props => {
       );
       if (image2 !== {}) {
         //FIX ME - maybe image1 is not main image
-        await axios.post(
-          `http://192.168.1.101:3000/userPictures/${conf.user_id}`,
-          {
-            base64image: image2.base64,
-            main_image: '0',
-          },
-        );
+        await axios.post(`${path}/userPictures/${conf.user_id}`, {
+          base64image: image2.base64,
+          main_image: '0',
+        });
       }
       if (image3 !== {}) {
-        await axios.post(
-          `http://192.168.1.101:3000/userPictures/${conf.user_id}`,
-          {
-            base64image: image3.base64,
-            main_image: '0',
-          },
-        );
+        await axios.post(`${path}/userPictures/${conf.user_id}`, {
+          base64image: image3.base64,
+          main_image: '0',
+        });
       }
       props.setVisible(false); //FIX ME - modal dont close
     } catch (error) {

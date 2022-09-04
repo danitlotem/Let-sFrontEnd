@@ -24,6 +24,12 @@ export const configurationSlice = createSlice({
   name: 'configer',
   initialState,
   reducers: {
+    updateUserId: (state, action) => {
+      state.userConfig.user_id = {
+        ...state.userConfig,
+        user_id: action.payload.user_id,
+      };
+    },
     updateDetails: (state, action) => {
       state.userConfig = action.payload.userConfig;
       state.email = action.payload.email;
@@ -61,6 +67,7 @@ export const configurationSlice = createSlice({
 });
 
 export const {
+  updateUserId,
   updateDetails,
   updateMainPictuer,
   updateSearchMode,

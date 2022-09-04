@@ -6,14 +6,15 @@ import {View, Image, ScrollView, Pressable, Modal} from 'react-native';
 import {Text, Avatar} from 'react-native-paper';
 import axios from 'axios';
 import styles from '../Styles/UserProfile';
+import {getCurrentPath} from '../utils/generalFunctions';
 //FIX ME
 //! maybe turn the opacity into a button include the featurs
 
 const UserProfile = props => {
   const config = props.config;
   const [photos, setPhotos] = useState([]);
-
-  const url = 'http://192.168.1.101:3000/userPictures/';
+  const path = getCurrentPath();
+  const url = `${path}/userPictures/`;
   const getPhotos = async () => {
     try {
       const photos = await axios.get(`${url}${config.user_id}`);
