@@ -7,7 +7,8 @@ import styles from '../../Styles/FiltersStyle';
 import {useSelector} from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Theme from '../../Styles/Theme';
-
+import {updateOneFilter} from '../../store/Slices/configurationSlice';
+import {useDispatch} from 'react-redux';
 const AgeItem = props => {
   const config = useSelector(state => state.configuration.userConfig);
   const [visible, setVisible] = useState(false);
@@ -15,6 +16,7 @@ const AgeItem = props => {
   const [max, setMax] = useState(config.age + 5);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
+  const dispatch = useDispatch();
 
   return (
     <View style={styles.FilterItem.viewStyle}>
@@ -31,7 +33,9 @@ const AgeItem = props => {
             onValuesChangeFinish={values => {
               setMax(values[1]);
               setMin(values[0]);
-              props.setAge(values);
+              dispatch(
+                updateOneFilter({filter: 'age_filter', item: [min, max]}),
+              );
             }}
           />
           <View style={styles.Modal.buttonContainer}>

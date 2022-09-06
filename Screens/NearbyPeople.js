@@ -41,7 +41,6 @@ const NearbyPeople = ({navigation}) => {
           },
         },
       );
-      console.log('DATA:', JSON.stringify(people, null, 2));
       dispatch(updateNearbyPeople({nearbyPeople: people.data}));
     } catch (err) {
       alert(err);
@@ -111,11 +110,11 @@ const NearbyPeople = ({navigation}) => {
   return (
     <View style={styles.View.container}>
       <UpperBar title={'Nearby people'} />
-      <StatusModal
+      {/* <StatusModal
         visible={visible}
         setVisible={setVisible}
         closeModal={hideModal}
-      />
+      /> */}
       <View style={styles.View.openFiltersContainer}>
         <Pressable
           style={styles.Pressable.filtersStyle}

@@ -1,13 +1,21 @@
+/* eslint-disable no-alert */
 /* eslint-disable react-native/no-inline-styles */
 // eslint-disable-next-line no-unused-vars
 import React from 'react';
 import {SafeAreaView, View, Text, Pressable, Image} from 'react-native';
+
 import {DrawerItemList} from '@react-navigation/drawer';
 import styles from '../Styles/MenuStyle';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Theme from '../Styles/Theme';
+import {StackActions} from '@react-navigation/native';
+import {clearConfigurationSlice} from '../store/Slices/configurationSlice';
+import {clearChatSlice} from '../store/Slices/chatSlice';
+import {clearGeneralSlice} from '../store/Slices/generalSlice';
+import {clearPeopleSlice} from '../store/Slices/peopleSlice';
+import {changeStatus} from '../store/Slices/generalSlice';
 
 const CustomSidebarMenu = props => {
   const navigation = useNavigation();
@@ -18,6 +26,22 @@ const CustomSidebarMenu = props => {
   const mySearchMode = useSelector(
     state => state.configuration.filters?.search_mode_filter,
   );
+  const dispatch = useDispatch();
+  const userLogout = () => {
+    try {
+      //FIX ME
+      navigation.dispatch(StackActions.popToTop());
+      dispatch(clearConfigurationSlice());
+      dispatch(clearChatSlice());
+      dispatch(clearGeneralSlice());
+      dispatch(clearPeopleSlice());
+      dispatch(changeStatus({status: 'disconnect'}));
+      navigation.navigate('Log In stack');
+    } catch (error) {
+      alert(error);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
@@ -63,6 +87,16 @@ const CustomSidebarMenu = props => {
         )}
       </View>
       <DrawerItemList {...props} />
+      <Pressable
+        onPress={() => userLogout()}
+        style={{marginTop: 30, alignSelf: 'center', flexDirection: 'row'}}>
+        <Ionicons
+          style={{marginRight: 10}}
+          size={18}
+          name={'log-out-outline'}
+        />
+        <Text>Logout</Text>
+      </Pressable>
     </SafeAreaView>
   );
 };

@@ -23,10 +23,21 @@ export const chatSlice = createSlice({
       state.currChat = [...state.currChat, action.payload.myMessage]; // FIX ME - add react.memo
       //state.currChat.push(action.payload.myMessage);
     },
+    clearChatSlice: state => initialState,
+    // {
+    //   state.OpenChats = [];
+    //   state.currChat = [];
+    //   state.messageWaiting = false;
+    // },
   },
 });
 
-export const {openChats, setCurrentChat, addMessageToChat, newMessageWaiting} =
-  chatSlice.actions;
+export const {
+  openChats,
+  setCurrentChat,
+  addMessageToChat,
+  newMessageWaiting,
+  clearChatSlice,
+} = chatSlice.actions;
 
 export default chatSlice.reducer;

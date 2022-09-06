@@ -20,7 +20,7 @@ const SignUp4 = props => {
   const conf = useSelector(state => state.configuration.userConfig);
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  console.log('CONF', conf);
+  const signUpConfig = useSelector(state => state.configuration.signUpConfig);
 
   const pickImage = num => {
     launchImageLibrary(

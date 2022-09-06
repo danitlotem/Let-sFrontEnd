@@ -2,22 +2,27 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, {useState} from 'react';
 import {View, Modal, Pressable, Text, Button} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import styles from '../../Styles/FiltersStyle';
 import Theme from '../../Styles/Theme';
+import {updateOneFilter} from '../../store/Slices/configurationSlice';
 
 const searchModeItems = props => {
   const [visible, setVisible] = useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
   const modes = useSelector(state => state.general.rawText.filters.Search_Mode);
+  const dispatch = useDispatch();
   const items = modes.map((item, index) => {
     return (
       <Pressable
         style={{marginTop: 20}}
         key={index}
-        onPress={() => (props.function(item), hideModal())}>
+        onPress={() => {
+          dispatch(updateOneFilter({filter: props.filter, item: item}));
+          hideModal();
+        }}>
         <Text style={{...styles.textItem, margin: 0}}>{item}</Text>
       </Pressable>
     );
@@ -42,7 +47,14 @@ const searchModeItems = props => {
         </Pressable>
         <Pressable
           style={styles.FilterItem.center}
-          onPress={() => props.function(props.arr[props.arr.length - 1])}>
+          onPress={() => {
+            dispatch(
+              updateOneFilter({
+                filter: props.filter,
+                item: props.arr[props.arr.length - 1],
+              }),
+            );
+          }}>
           <Ionicons
             color={Theme.backgroundColor}
             size={18}

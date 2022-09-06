@@ -41,7 +41,6 @@ const SignUpStack = [
 const loggingToAppScreens = [
   {title: 'Log In stack', screen: LogIn},
   {title: 'newHome', screen: newHome, icon: 'home-outline'},
-  // {title: 'newHobbies', screen: newHobbies, icon: 'home-outline'},
   {title: 'SignUp', screen: SignUpScreen},
   {title: 'UplaodImageModal', screen: UplaodImageModal},
   {title: 'HomeStack', screen: DrawerNavi},
@@ -66,7 +65,7 @@ const DrawerScreens = [
     screen: ChatsAndConvScreen,
     icon: 'chatbox-ellipses-outline',
   },
-  {title: 'Settings', screen: Settings, icon: 'settings-outline'},
+  // {title: 'Settings', screen: Settings, icon: 'settings-outline'},
 ];
 
 function FiltersBarScreen() {
@@ -104,6 +103,7 @@ const SignUpStackItems = SignUpStack.map(item => {
 const loggingToAppItems = loggingToAppScreens.map(item => {
   return (
     <MainDrawer.Screen
+      // options={{gestureEnabled: false}}
       name={item.title}
       component={item.screen}
       key={item.screen}
@@ -117,16 +117,26 @@ const DrawerItems = DrawerScreens.map(item => {
       name={item.title}
       key={item.title}
       component={item.screen}
-      options={{
-        drawerLabelStyle: {
-          fontFamily: Theme.fontFamilyBold,
-          color: Theme.secondColor,
-        },
-        activeBackgroundColor: {backgroundColor: '#316172'},
-        drawerIcon: () => (
-          <Ionicons color={Theme.secondColor} name={item.icon} size={22} />
-        ),
-      }}
+      options={
+        item.title !== 'My Profile'
+          ? {
+              drawerLabelStyle: {
+                fontFamily: Theme.fontFamilyBold,
+                color: Theme.secondColor,
+              },
+              activeBackgroundColor: {backgroundColor: '#316172'},
+              drawerIcon: () => (
+                <Ionicons
+                  color={Theme.secondColor}
+                  name={item.icon}
+                  size={22}
+                />
+              ),
+            }
+          : {
+              drawerItemStyle: {display: 'none'},
+            }
+      }
     />
   );
 });
@@ -136,6 +146,13 @@ function SignUpScreen() {
     <chatsAndConvScreenStack.Navigator screenOptions={{headerShown: false}}>
       {SignUpStackItems}
     </chatsAndConvScreenStack.Navigator>
+  );
+}
+function menuAndProfileStack() {
+  return (
+    <menuAndProfileStack.Navigator screenOptions={{headerShown: false}}>
+      {menuAndProfileItems}
+    </menuAndProfileStack.Navigator>
   );
 }
 function ChatsAndConvScreen() {

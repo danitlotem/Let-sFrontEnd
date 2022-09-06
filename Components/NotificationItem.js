@@ -8,9 +8,7 @@ import axios from 'axios';
 import Theme from '../Styles/Theme';
 import {getCurrentPath} from '../utils/generalFunctions';
 const NotificationItem = props => {
-  console.log(props);
   const seen = props.details.seen;
-  console.log(seen);
   const path = getCurrentPath();
   const id = props.details.notification_id;
   return (
@@ -33,7 +31,6 @@ const NotificationItem = props => {
         style={styles.Pressables}
         onPress={async () => {
           const res = await axios.put(`${path}/notifications/${id}`);
-          console.log(res.data);
         }}>
         <Ionicons name="close-outline" size={35} color={'#0E6070'} />
         <Ionicons

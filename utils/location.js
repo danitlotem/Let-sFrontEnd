@@ -55,7 +55,6 @@ const postLocation = async (verifyToken, myUserId, mylongitude, mylatitude) => {
 
 export function* sendLocation(myUserId, mylongitude, mylatitude) {
   const verifyToken = yield select(getToken);
-  console.log(`myLatitude: ${mylatitude}, myLongitude: ${mylongitude}`);
   const resPost = yield call(
     postLocation,
     verifyToken,

@@ -25,7 +25,6 @@ const Home = () => {
   const myLongitude = useSelector(state => state.general.myLongitude);
   const myLatitude = useSelector(state => state.general.myLatitude);
   const text = useSelector(state => state.general.rawText);
-  console.log(text);
   const data = useSelector(state => state.general.rawText.filters.Search_Mode);
   const myUserId = useSelector(state => state.configuration.userConfig.user_id);
   const verifyToken = useSelector(state => state.configuration.token);
@@ -40,7 +39,8 @@ const Home = () => {
     interested_in_filter: 'Interested in',
     age_filter: [],
     radius_filter: 1000,
-    friends_only_filter: 0,
+    friends_only_filter: false,
+    online_filter: true,
   };
 
   const getUsersBySearchModes = async () => {

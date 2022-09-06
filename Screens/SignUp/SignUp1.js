@@ -67,6 +67,7 @@ function SignUp1({navigation}) {
 
   const updateState = () => {
     dispatch(updateConfiguration({signUpConfig: {...configuration}}));
+
   };
 
   return (

@@ -9,7 +9,6 @@ const styles = StyleSheet.create({
       backgroundColor: '#ffffff',
       fontSize: 16,
       fontFamily: Theme.fontFamilyRegular,
-      borderWidth: 1,
       borderRadius: 5,
     },
   },

@@ -10,10 +10,9 @@ const styles = StyleSheet.create({
   View: {
     headerBlock: {
       alignItems: 'center',
-      top: 20,
     },
     filtersMenu: {
-      top: 30,
+      top: 15,
       alignSelf: 'center',
       width: '90%',
       height: '80%',

@@ -14,9 +14,9 @@ const initialState = {
     relationship_filter: 'Relationship',
     interested_in_filter: 'Interested in',
     age_filter: [],
-    friends_only_filter: 0,
-    radius_filter: 500,
+    friends_only_filter: false,
     online_filter: true,
+    radius_filter: 500,
   },
 };
 
@@ -53,9 +53,15 @@ export const configurationSlice = createSlice({
     updateFilters: (state, action) => {
       state.filters = {...action.payload.filters};
     },
+    updateOneFilter: (state, action) => {
+      const filter = action.payload.filter;
+      const item = action.payload.item;
+      state.filters[filter] = item;
+    },
+
     clearFilters: state => {
       state.filters = {...initialState.filters};
-      console.log('changed');
+      console.log('cleared');
     },
     clearHobbies: state => {
       state.myHobbies = [];
@@ -63,12 +69,14 @@ export const configurationSlice = createSlice({
     clearSignUpConfig: state => {
       state.signUpConfig = {};
     },
+    clearConfigurationSlice: state => initialState,
   },
 });
 
 export const {
   updateUserId,
   updateDetails,
+  updateOneFilter,
   updateMainPictuer,
   updateSearchMode,
   clearSignUpConfig,
@@ -77,6 +85,7 @@ export const {
   updateFilters,
   clearFilters,
   clearHobbies,
+  clearConfigurationSlice,
 } = configurationSlice.actions;
 
 export default configurationSlice.reducer;

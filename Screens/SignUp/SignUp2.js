@@ -10,7 +10,6 @@ import {updateConfiguration} from '../../store/Slices/configurationSlice';
 
 function SignUp2({navigation}) {
   const rawText = useSelector(state => state.general.rawText.registration_form);
-  console.log(rawText);
   const [gender, setGender] = useState('');
   const [sexualOrientation, setSexualOrientation] = useState('');
   const [relationshipStatus, setRelationshipStatus] = useState(0);

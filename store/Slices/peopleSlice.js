@@ -23,6 +23,13 @@ export const peopleSlice = createSlice({
     searchFriend: (state, action) => {
       state.friendToSearch = action.payload.friendToSearch;
     },
+    clearPeopleSlice: state => initialState,
+    // {
+    //   state.nearbyPeople = [];
+    //   state.myFriends = [];
+    //   state.friendToSearch = '';
+    //   state.usersBySearchModes = {};
+    // },
   },
 });
 
@@ -31,6 +38,7 @@ export const {
   updateMyFriends,
   searchFriend,
   updateUsersBySearchModes,
+  clearPeopleSlice,
 } = peopleSlice.actions;
 
 export default peopleSlice.reducer;

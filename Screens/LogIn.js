@@ -17,6 +17,7 @@ import {
   clearSignUpConfig,
 } from '../store/Slices/configurationSlice';
 import {getCurrentPath} from '../utils/generalFunctions';
+
 const LogIn = ({navigation}) => {
   const path = getCurrentPath();
   const [email, setEmail] = useState('');
@@ -31,7 +32,7 @@ const LogIn = ({navigation}) => {
 
   useEffect(() => {
     getFcmToken();
-  }, []);
+  }, [dispatch]);
 
   const validateEmail = () => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
@@ -58,7 +59,6 @@ const LogIn = ({navigation}) => {
         alert(response.data.msg);
       } else {
         try {
-          console.log('USER ID: ', response.data.user_id);
           const getUser = await axios.get(
             `${path}/userConfiguration/${response.data.user_id}`,
             {
@@ -67,7 +67,6 @@ const LogIn = ({navigation}) => {
               },
             },
           );
-          console.log('1');
           dispatch(
             updateDetails({
               userConfig: getUser.data[0],
@@ -83,6 +82,7 @@ const LogIn = ({navigation}) => {
         }
       }
     } catch (error) {
+
       alert(error);
     }
   };

@@ -7,12 +7,14 @@ import RnVerticalSlider from 'rn-vertical-slider';
 import styles from '../../Styles/FiltersStyle';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Theme from '../../Styles/Theme';
+import {updateOneFilter} from '../../store/Slices/configurationSlice';
+import {useDispatch} from 'react-redux';
 
 const Radius = props => {
   const [visible, setVisible] = useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
-
+  const dispatch = useDispatch();
   return (
     <View style={styles.FilterItem.viewStyle}>
       <Modal transparent={true} visible={visible}>
@@ -31,11 +33,13 @@ const Radius = props => {
               min={0}
               max={5000}
               onChange={value => {
-                props.setRadius(value); //FIX ME
+                dispatch(
+                  updateOneFilter({filter: 'radius_filter', item: value}),
+                );
               }}
-              onComplete={value => {
-                console.log('COMPLETE', value);
-              }}
+              // onComplete={value => {
+              //   console.log('COMPLETE', value);
+              // }}
               width={50}
               height={300}
               step={100}

@@ -28,6 +28,7 @@ const SignUp3 = ({route, navigation}) => {
   const myHobbies = useSelector(state => state.configuration.myHobbies);
   const hobbies = useSelector(state => state.general.rawText.Hobbies);
   const signUpConfig = useSelector(state => state.configuration.signUpConfig);
+
   const getImages = item => {
     if (item === 'Sport')
       return require(`../../assets/Images/Hobbies/Hobbie-Sport.jpg`);
