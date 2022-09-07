@@ -21,6 +21,7 @@ const UserItem = props => {
   const myConfig = useSelector(state => state.configuration.userConfig);
   const navigation = useNavigation();
   const myStatus = config.user_status;
+  const verifyToken = useSelector(state => state.configuration.token);
   const path = getCurrentPath();
   const typeIcon = () => {
     if (props.type === 'notFriend')
@@ -94,9 +95,18 @@ const UserItem = props => {
   };
   const createNewChat = async () => {
     try {
-      await axios.post(`${path}/chats/${myConfig.user_id}/${config.user_id}`);
-    } catch {
-      alert('in catch');
+      const res = await axios.post(
+        `${path}/chats/${myConfig.user_id}/${config.user_id}`,
+        {},
+        {
+          headers: {
+            authorization: 'bearer ' + verifyToken,
+          },
+        },
+      );
+      console.log(res.data);
+    } catch (err) {
+      alert(err);
     }
   };
   const onPressType = type => {
@@ -105,6 +115,7 @@ const UserItem = props => {
     } else if (props.type === 'friend') {
       console.log("let's start new chat ");
       createNewChat();
+      console.log('----HERE----');
       navigation.navigate('Chats');
     } else if (props.type === 'requestsUserReceived') {
       props.function(config.user_id);
@@ -115,12 +126,12 @@ const UserItem = props => {
 
   return (
     <View style={styles.UserItem}>
-      <UserProfile
+      {/* <UserProfile
         visible={visible}
         setVisible={setVisible}
         {...props}
         closeModal={hideModal}
-      />
+      /> */}
 
       <Pressable
         onPress={() => {

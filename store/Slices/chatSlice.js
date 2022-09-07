@@ -11,7 +11,7 @@ export const chatSlice = createSlice({
   initialState,
   reducers: {
     openChats: (state, action) => {
-      state.OpenChats = action.payload.OpenChats;
+      state.OpenChats = [...action.payload.OpenChats];
     },
     setCurrentChat: (state, action) => {
       state.currChat = [...action.payload.currChat];

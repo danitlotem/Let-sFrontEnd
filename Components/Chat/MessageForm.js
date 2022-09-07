@@ -17,6 +17,7 @@ const MessageForm = props => {
   const messages = useSelector(state => state.chat.currChat);
   const dispatch = useDispatch();
   const path = getCurrentPath();
+  const verifyToken = useSelector(state => state.configuration.token);
 
   const HandleSubmit = async () => {
     try {
@@ -24,6 +25,11 @@ const MessageForm = props => {
         `${path}/messages/${myUserId}/${props.friendID}`,
         {
           content: message,
+        },
+        {
+          headers: {
+            Authorization: 'Bearer ' + verifyToken,
+          },
         },
       );
       dispatch(addMessageToChat({myMessage: myMessage.data[0]}));

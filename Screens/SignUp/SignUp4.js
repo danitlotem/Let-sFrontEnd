@@ -1,18 +1,23 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-alert */
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, Image, Pressable} from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useSelector, useDispatch} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
-import {updateMainPictuer} from '../../store/Slices/configurationSlice';
+import {
+  updateMainPictuer,
+  clearSignUpConfig,
+} from '../../store/Slices/configurationSlice';
 import styles from '../../Styles/SignUpStyle';
 import Theme from '../../Styles/Theme';
 import {getCurrentPath} from '../../utils/generalFunctions';
 
-const SignUp4 = props => {
+const SignUp4 = route => {
+  const page = route.params;
+
   const path = getCurrentPath();
   const [image1, setImage1] = useState({});
   const [image2, setImage2] = useState({});
@@ -21,6 +26,11 @@ const SignUp4 = props => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const signUpConfig = useSelector(state => state.configuration.signUpConfig);
+  const verifyToken = useSelector(state => state.configuration.token);
+
+  useEffect(() => {
+    dispatch(clearSignUpConfig()); // NOTICE
+  });
 
   const pickImage = num => {
     launchImageLibrary(
@@ -45,10 +55,18 @@ const SignUp4 = props => {
   const uploadImage = async () => {
     try {
       if (image1 !== {}) {
-        await axios.post(`${path}/userPictures/${conf.user_id}`, {
-          base64image: image1.base64,
-          main_image: '1',
-        });
+        await axios.post(
+          `${path}/userPictures/${conf.user_id}`,
+          {
+            base64image: image1.base64,
+            main_image: '1',
+          },
+          {
+            headers: {
+              Authorization: 'Bearer ' + verifyToken,
+            },
+          },
+        );
       }
       dispatch(
         updateMainPictuer({
@@ -149,7 +167,10 @@ const SignUp4 = props => {
                 borderRadius: 5,
                 marginTop: 10,
               }}
-              onPress={() => navigation.navigate('Log In stack')}>
+              onPress={() => {
+                console.log(page);
+                navigation.navigate(page);
+              }}>
               <Text
                 style={{
                   alignSelf: 'center',

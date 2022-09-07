@@ -4,22 +4,23 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import {View, Text, Pressable, Image} from 'react-native';
-import {Avatar} from 'react-native-paper';
+
 import styles from '../../Styles/ChatStyle';
 import {useNavigation} from '@react-navigation/native';
-import {useSelector} from 'react-redux';
+
 const ChatItem = props => {
   const data = props.data;
   const navigation = useNavigation();
-  const navi = () => {
-    navigation.navigate('Conversation', {
-      friendConfig: props.data,
-    });
-  };
 
   return (
     //FIX ME how to move to certain conversation with certain user
-    <Pressable style={styles.Pressable.item} onPress={() => navi()}>
+    <Pressable
+      style={styles.Pressable.item}
+      onPress={() => {
+        navigation.navigate('Conversation', {
+          friendConfig: props.data,
+        });
+      }}>
       <Pressable style={styles.Pressable.Pressables}>
         <Image
           style={styles.Image.userPic}

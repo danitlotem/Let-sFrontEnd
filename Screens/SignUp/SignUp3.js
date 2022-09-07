@@ -65,18 +65,13 @@ const SignUp3 = ({route, navigation}) => {
   };
   const AddUserToDB = async event => {
     try {
+      console.log('--------3-------');
+      console.log(signUpConfig);
       const response = await axios.post(`${path}/auth/register`, signUpConfig);
       if (response.data.hasOwnProperty('msg')) {
         alert(response.data.msg);
       } else {
-        // let loginDetails = {
-        //   userConfig: response.data, //BUG!!!! response.data is status and not db
-        //   email: response.data.email,
-        //   fullName: `${response.data.first_name} ${response.data.last_name}`,
-        //   token: response.data.token,
-        // };
         console.log('response.data:', response.data);
-        //dispatch(updateDetails(loginDetails));
         dispatch(updateUserId({user_id: response.data.user_id}));
       }
     } catch (error) {
@@ -143,7 +138,7 @@ const SignUp3 = ({route, navigation}) => {
             onPress={async () => {
               updateState();
               await AddUserToDB();
-              navigation.navigate('SignUp4');
+              navigation.navigate('SignUp4', {page: 'SignUp3'});
             }}
           />
         </View>

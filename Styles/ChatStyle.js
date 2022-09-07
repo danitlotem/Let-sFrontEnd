@@ -105,7 +105,6 @@ const styles = StyleSheet.create({
       fontSize: 22,
       color: Theme.secondColor,
       fontFamily: Theme.fontFamilyBold,
-      alignSelf: 'center',
     },
     body: {
       fontSize: 18,

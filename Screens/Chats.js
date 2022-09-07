@@ -10,6 +10,7 @@ import axios from 'axios';
 import {useSelector, useDispatch} from 'react-redux';
 import {openChats} from '../store/Slices/chatSlice';
 import {getCurrentPath} from '../utils/generalFunctions';
+import Theme from '../Styles/Theme';
 const Chat = () => {
   const path = getCurrentPath();
   const myUserId = useSelector(state => state.configuration.userConfig.user_id);
@@ -19,6 +20,7 @@ const Chat = () => {
 
   const getAllChats = async () => {
     //FIX ME there is a problem with update list of open chats
+
     try {
       const res = await axios.get(`${path}/chats/${myUserId}`, {
         headers: {
@@ -40,9 +42,17 @@ const Chat = () => {
       <View style={styles.View.UpperBarContainer}>
         <UpperBar />
       </View>
-      <Text style={styles.Text.title}>my Chats</Text>
+      <Text
+        style={{
+          alignSelf: 'center',
+          fontSize: 22,
+          color: Theme.secondColor,
+          fontFamily: Theme.fontFamilyBold,
+        }}>
+        my Chats
+      </Text>
       <View style={styles.View.chatListContainer}>
-        {chats.map((item, index) => (
+        {chats?.map((item, index) => (
           <ChatItem key={index} data={item} />
         ))}
       </View>

@@ -20,7 +20,8 @@ function socketService(token) {
       };
       socket.onmessage = event => {
         console.log('EVENT DATA: ', event.data);
-        return emitter({type: newMessageWaiting.type, payload: event.data});
+        return emitter({type: newMessageWaiting.type, payload: true});
+        // return emitter({type: newMessageWaiting.type, payload: event.data});
       };
     }
 

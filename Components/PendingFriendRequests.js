@@ -4,22 +4,22 @@
 /* eslint-disable no-prototype-builtins */
 import React, {useState, useEffect} from 'react';
 import {View, Text, Pressable, StyleSheet} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import UserItem from '../Components/userItem';
+import {updateReceivedRequests} from '../store/Slices/peopleSlice';
 import {getCurrentPath} from '../utils/generalFunctions';
 const PendingFriendRequests = props => {
   const userId = useSelector(state => state.configuration.userConfig.user_id);
-  const [listOfConf, setlistOfConf] = useState([]);
   const path = getCurrentPath();
-
+  const dispatch = useDispatch();
   const getMyFriendRequest = async () => {
     try {
       const friends = await axios.get(
         `${path}/friendRequest/sendRequests/${userId}`,
       );
       if (!friends.data.hasOwnProperty('msg')) {
-        setlistOfConf([...friends.data]);
+        dispatch(updateReceivedRequests({sent: [...friends.data]}));
       }
     } catch (error) {
       alert(error);

@@ -25,6 +25,7 @@ const LogIn = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [validEmail, setValidEmail] = useState(false);
   const dispatch = useDispatch();
+
   const getFcmToken = async event => {
     const fcmtoken = await AsyncStorage.getItem('fcmtoken');
     setDeviceToken(fcmtoken);
@@ -50,15 +51,18 @@ const LogIn = ({navigation}) => {
 
   const onSubmitFormHandler = async () => {
     try {
+      console.log('1', email, password, deviceToken);
       const response = await axios.post(`${path}/auth/login`, {
         email: email,
         password: password,
         device_token: deviceToken,
       });
+      console.log('****', response.data);
       if (response.data.hasOwnProperty('msg')) {
         alert(response.data.msg);
       } else {
         try {
+          console.log('2');
           const getUser = await axios.get(
             `${path}/userConfiguration/${response.data.user_id}`,
             {
@@ -75,6 +79,8 @@ const LogIn = ({navigation}) => {
               token: response.data.token,
             }),
           );
+          console.log('3');
+
           dispatch(changeStatus({status: 'connected'}));
           navigation.navigate('HomeStack');
         } catch (error) {
@@ -82,7 +88,6 @@ const LogIn = ({navigation}) => {
         }
       }
     } catch (error) {
-
       alert(error);
     }
   };

@@ -53,16 +53,16 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   title: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 18,
+    // fontWeight: 'bold',
     alignItems: 'flex-start',
-    color: '#2B7CAD',
+    color: Theme.secondColor,
+    fontFamily: Theme.fontFamilyBold,
   },
   body: {
-    fontSize: 16,
     alignItems: 'flex-start',
-    color: '#105A87',
-    fontWeight: 'bold',
+    color: Theme.secondColor,
+    fontFamily: Theme.fontFamily,
   },
   textClearBtn: {
     color: 'white',

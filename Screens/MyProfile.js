@@ -16,10 +16,10 @@ import Hobbies from '../Components/Filters/Hobbies';
 import TInput from '../Components/TInput';
 import styles from '../Styles/MyProfileStyle';
 import {useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import UpperBar from '../Components/UpperBar';
 import Theme from '../Styles/Theme';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {getCurrentPath} from '../utils/generalFunctions';
 const MyProfile = () => {
@@ -35,6 +35,7 @@ const MyProfile = () => {
   birthday = birthday.split('-');
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
+  const navigation = useNavigation();
   var year = birthday[0];
   var month = birthday[1];
   var day = parseInt(birthday[2].slice(0, 2)) + 1;
@@ -96,11 +97,28 @@ const MyProfile = () => {
           })}
           <View>
             {/* FIX ME - navigate to signUp4 */}
-            <Pressable>
+            <Pressable
+              style={{
+                backgroundColor: Theme.secondColor,
+                padding: 5,
+                margin: 3,
+                borderRadius: 7,
+              }}
+              onPress={() =>
+                navigation.navigate('UploadPictures', {
+                  page: 'myProfile',
+                })
+              }>
               <Text>upload photos</Text>
             </Pressable>
 
             <Pressable
+              style={{
+                backgroundColor: Theme.highLightColor,
+                padding: 5,
+                margin: 3,
+                borderRadius: 7,
+              }}
               onPress={() => {
                 if (edit === true) {
                   //NOTICE - add api call - update conficuration

@@ -23,7 +23,7 @@ const AgeItem = props => {
       <Modal transparent={true} visible={visible}>
         <View style={styles.Modal.Item}>
           <Text style={styles.Modal.title}>Age</Text>
-          <Text style={styles.Modal.sliderValues}>{`${min}-${max}`}</Text>
+          <Text style={styles.Modal.sliderValues}>{`${min}-${max + 1}`}</Text>
           <MultiSlider
             sliderLength={290}
             isMarkersSeparated={true}

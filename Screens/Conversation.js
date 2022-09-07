@@ -37,7 +37,8 @@ const Conversation = ({route}) => {
   const myId = useSelector(state => state.configuration.userConfig.user_id);
   const messages = useSelector(state => state.chat.currChat);
   const verifyToken = useSelector(state => state.configuration.token);
-
+  const messageWaiting = useSelector(state => state.chat.messageWaiting);
+  console.log(messages);
   const dispatch = useDispatch();
   const getMessages = async () => {
     //FIX ME there is a problem with update list of open chats
@@ -47,6 +48,7 @@ const Conversation = ({route}) => {
           Authorization: 'Bearer ' + verifyToken,
         },
       });
+      console.log(res.data);
       if (res.data.hasOwnProperty('msg')) {
         dispatch(
           setCurrentChat({
@@ -67,7 +69,12 @@ const Conversation = ({route}) => {
 
   useEffect(() => {
     getMessages();
-  }, [messages]);
+    dispatch(
+      newMessageWaiting({
+        messageWaiting: false,
+      }),
+    );
+  }, [messageWaiting]); //FIX ME
 
   return (
     <KeyboardAvoidingView style={styles.View.container}>
@@ -90,26 +97,20 @@ const Conversation = ({route}) => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.View.chatFeed}>
           <ScrollView style={{height: '80%'}}>
-            {messages.length > 0 ? (
-              messages.map((item, index) => (
-                <View key={index}>
-                  {myId === item.sender_user_id ? (
-                    <MyMessage
-                      content={item?.content}
-                      time={item?.creation_date}
-                    />
-                  ) : (
-                    <TheirMessage
-                      friendName={friendName}
-                      content={item?.content}
-                      time={item?.creation_date}
-                    />
-                  )}
-                </View>
-              ))
-            ) : (
-              <Text>This is an empty chat</Text>
-            )}
+            {messages.length > 0} &&
+            {messages?.map((item, index) => (
+              <View key={index}>
+                ({myId === item.sender_user_id} ? (
+                <MyMessage content={item?.content} time={item?.creation_date} />
+                ) : (
+                <TheirMessage
+                  friendName={friendName}
+                  content={item?.content}
+                  time={item?.creation_date}
+                />
+                ) )
+              </View>
+            ))}
           </ScrollView>
           <View style={styles.View.messageFormContainer}>
             <MessageForm friendID={friendId} />

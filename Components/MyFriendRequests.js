@@ -3,17 +3,19 @@
 /* eslint-disable no-alert */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable no-unused-vars */
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, Pressable, StyleSheet} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import UserItem from '../Components/userItem';
 import {getCurrentPath} from '../utils/generalFunctions';
+import {updateReceivedRequests} from '../store/Slices/peopleSlice';
 const MyFriendRequests = props => {
-  const [listOfConf, setlistOfConf] = useState([]);
+  const listOfConf = useSelector(state => state.people.receivedRequests);
   const userConfig = useSelector(state => state.configuration.userConfig);
   const user_id = userConfig.user_id;
   const path = getCurrentPath();
+  const dispatch = useDispatch();
   const onAccept = async userNum => {
     try {
       await axios.post(`${path}/friendRequest/approve/${user_id}/${userNum}`);
@@ -24,12 +26,13 @@ const MyFriendRequests = props => {
   };
 
   const getMyFriendRequest = async () => {
+    console.log(`${path}/friendRequest/receivedRequests/${user_id}`);
     try {
       const friends = await axios.get(
         `${path}/friendRequest/receivedRequests/${user_id}`,
       );
       if (!friends.data.hasOwnProperty('msg')) {
-        setlistOfConf([...friends.data]);
+        dispatch(updateReceivedRequests({requests: [...friends.data]}));
       }
     } catch (error) {
       alert(error);
@@ -48,7 +51,7 @@ const MyFriendRequests = props => {
         <Text>X</Text>
       </Pressable>
       <Text>My friend request</Text>
-      {/* {listOfConf &&
+      {listOfConf &&
         listOfConf.map(item => {
           return (
             <UserItem
@@ -58,7 +61,7 @@ const MyFriendRequests = props => {
               function={onAccept}
             />
           );
-        })} */}
+        })}
     </View>
   );
 };

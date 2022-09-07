@@ -25,7 +25,7 @@ const NotificationItem = props => {
         borderRadius: 5,
         borderColor: '#fff',
         borderWidth: 1.5,
-        backgroundColor: seen !== 1 ? Theme.secondColor : 'white',
+        backgroundColor: seen !== 1 ? Theme.highLightColor : 'white',
       }}>
       <Pressable
         style={styles.Pressables}

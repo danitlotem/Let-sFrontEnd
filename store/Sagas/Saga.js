@@ -36,7 +36,7 @@ export function* rootSaga() {
   yield call(helloApp);
   yield call(getConstants);
 
-  console.log('-----------------'); //FIX ME
+  console.log('---------Saga--------'); //FIX ME
   // while (true) {
   yield take(changeStatus.type);
   yield fork(getCurrentLocationSaga);

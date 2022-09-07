@@ -16,7 +16,8 @@ function SignUp2({navigation}) {
   const [pronoun, setPronoun] = useState(0);
   const dispatch = useDispatch();
   const signUpConfig = useSelector(state => state.configuration.signUpConfig);
-
+  console.log('----------2----------');
+  console.log(signUpConfig);
   const chipStyle = (value, chip) => {
     return {
       borderRadius: 7,

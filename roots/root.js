@@ -42,7 +42,7 @@ const loggingToAppScreens = [
   {title: 'Log In stack', screen: LogIn},
   {title: 'newHome', screen: newHome, icon: 'home-outline'},
   {title: 'SignUp', screen: SignUpScreen},
-  {title: 'UplaodImageModal', screen: UplaodImageModal},
+  {title: 'UploadPictures', screen: SignUp4},
   {title: 'HomeStack', screen: DrawerNavi},
 ];
 
@@ -65,7 +65,7 @@ const DrawerScreens = [
     screen: ChatsAndConvScreen,
     icon: 'chatbox-ellipses-outline',
   },
-  // {title: 'Settings', screen: Settings, icon: 'settings-outline'},
+  {title: 'UploadPictures', screen: SignUp4, icon: 'image-outline'},
 ];
 
 function FiltersBarScreen() {
@@ -118,7 +118,7 @@ const DrawerItems = DrawerScreens.map(item => {
       key={item.title}
       component={item.screen}
       options={
-        item.title !== 'My Profile'
+        item.title !== 'My Profile' && item.title !== 'UploadPictures'
           ? {
               drawerLabelStyle: {
                 fontFamily: Theme.fontFamilyBold,
@@ -148,13 +148,7 @@ function SignUpScreen() {
     </chatsAndConvScreenStack.Navigator>
   );
 }
-function menuAndProfileStack() {
-  return (
-    <menuAndProfileStack.Navigator screenOptions={{headerShown: false}}>
-      {menuAndProfileItems}
-    </menuAndProfileStack.Navigator>
-  );
-}
+
 function ChatsAndConvScreen() {
   return (
     <chatsAndConvScreenStack.Navigator screenOptions={{headerShown: false}}>

@@ -5,6 +5,8 @@ const initialState = {
   myFriends: [],
   friendToSearch: '',
   usersBySearchModes: {},
+  receivedRequests: [],
+  sendRequests: [],
 };
 
 export const peopleSlice = createSlice({
@@ -20,16 +22,16 @@ export const peopleSlice = createSlice({
     updateMyFriends: (state, action) => {
       state.myFriends = action.payload.myFriends;
     },
+    updateReceivedRequests: (state, action) => {
+      state.receivedRequests = [...action.payload.requests];
+    },
+    updateSendRequests: (state, action) => {
+      state.sendRequests = [...action.payload.sent];
+    },
     searchFriend: (state, action) => {
       state.friendToSearch = action.payload.friendToSearch;
     },
     clearPeopleSlice: state => initialState,
-    // {
-    //   state.nearbyPeople = [];
-    //   state.myFriends = [];
-    //   state.friendToSearch = '';
-    //   state.usersBySearchModes = {};
-    // },
   },
 });
 

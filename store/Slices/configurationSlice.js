@@ -2,7 +2,16 @@ import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
   userConfig: {},
-  signUpConfig: {},
+  signUpConfig: {
+    email: '',
+    password: '',
+    first_name: '',
+    last_name: '',
+    date_of_birth: '',
+    city: '',
+    phone_number: '',
+    profession: '',
+  },
   email: '',
   fullName: '',
   token: '',
@@ -58,6 +67,11 @@ export const configurationSlice = createSlice({
       const item = action.payload.item;
       state.filters[filter] = item;
     },
+    updateOneSignUpConfig: (state, action) => {
+      const key = action.payload.key;
+      const value = action.payload.value;
+      state.signUpConfig[key] = value;
+    },
 
     clearFilters: state => {
       state.filters = {...initialState.filters};
@@ -83,6 +97,7 @@ export const {
   updateConfiguration,
   updateHobbies,
   updateFilters,
+  updateOneSignUpConfig,
   clearFilters,
   clearHobbies,
   clearConfigurationSlice,
