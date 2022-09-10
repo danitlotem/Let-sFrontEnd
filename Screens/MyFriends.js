@@ -43,7 +43,6 @@ const MyFriends = () => {
           },
         },
       );
-      console.log('MY Friends:', friends.data),
         dispatch(
           updateMyFriends({
             myFriends: friends.data,

@@ -80,7 +80,7 @@ export function* getCurrentLocationSaga() {
         );
       }, 10000);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 }

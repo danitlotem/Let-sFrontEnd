@@ -114,7 +114,6 @@ const UserItem = props => {
     } else if (props.type === 'friend') {
       console.log("let's start new chat ");
       createNewChat();
-      console.log('----HERE----');
       navigation.navigate('Chats');
     } else if (props.type === 'requestsUserReceived') {
       props.function(config.user_id);

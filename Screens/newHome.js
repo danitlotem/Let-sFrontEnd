@@ -22,6 +22,7 @@ const Home = () => {
 
   const myLongitude = useSelector(state => state.general.myLongitude);
   const myLatitude = useSelector(state => state.general.myLatitude);
+  const refresh = useSelector(state => state.general.refresh);
   const text = useSelector(state => state.general.rawText);
   const data = useSelector(state => state.general.rawText.filters.Search_Mode);
   const myUserId = useSelector(state => state.configuration.userConfig.user_id);
@@ -61,7 +62,7 @@ const Home = () => {
 
   useEffect(() => {
     getUsersBySearchModes();
-  }, [myLongitude, myLatitude]);
+  }, [myLongitude, myLatitude, refresh]);
 
   const getImages = item => {
     if (item === 'Chill') return require(`../assets/Images/Hangout.jpg`);

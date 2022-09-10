@@ -77,7 +77,6 @@ const LogIn = ({navigation}) => {
               token: response.data.token,
             }),
           );
-          console.log('3');
 
           dispatch(changeStatus({status: 'connected'}));
           navigation.navigate('HomeStack');

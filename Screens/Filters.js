@@ -119,7 +119,6 @@ const CustomFiltersBar = props => {
             value={friends_only_filter}
             onValueChange={() => {
               const tempFilter = friends_only_filter === true ? false : true;
-              console.log(friends_only_filter);
               dispatch(
                 updateOneFilter({
                   filter: 'friends_only_filter',

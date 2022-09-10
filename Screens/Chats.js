@@ -15,6 +15,7 @@ const Chat = () => {
   const myUserId = useSelector(state => state.configuration.userConfig.user_id);
   const verifyToken = useSelector(state => state.configuration.token);
   const chats = useSelector(state => state.chat.OpenChats);
+  const currChat = useSelector(state => state.chat.currChat);
   const dispatch = useDispatch();
 
   const getAllChats = async () => {
@@ -32,7 +33,7 @@ const Chat = () => {
 
   useEffect(() => {
     getAllChats();
-  }, []);
+  }, [chats, dispatch, openChats, currChat]);
 
   return (
     <View style={styles.View.manageChatsContainer}>

@@ -35,7 +35,7 @@ function socketService(token) {
       };
     }
     return () => {
-      console.log('Socket off');
+      console.log('SOCKET OFF');
     };
   });
 }
@@ -48,14 +48,11 @@ export function* watchSocket() {
   try {
     while (true) {
       let data = yield take(requestChan);
-      console.log('***DATA:', data);
       if (data.type === refreshOnlineUsers.type) {
         yield put(refreshOnlineUsers(true));
       }
       if (data.type === newMessageWaiting.type) {
         let theirMessage = JSON.parse(data.payload);
-        console.log('----2: socket----');
-        console.log(theirMessage);
         if (theirMessage.receiver_user_id === myID) {
           yield put(addMessageToChat({myMessage: theirMessage}));
         }

@@ -17,14 +17,10 @@ export const chatSlice = createSlice({
       state.currChat = [...action.payload.currChat];
     },
     newMessageWaiting: (state, action) => {
-      console.log('action.payload: ', action.payload);
       state.messageWaiting = action.payload.messageWaiting;
-      console.log(`----1: ${state.messageWaiting}----`);
     },
     addMessageToChat: (state, action) => {
       state.currChat = [...state.currChat, action.payload.myMessage]; // FIX ME - add react.memo
-      console.log('-----------CURR CHAT-------------');
-      console.log(JSON.stringify(state.currChat, null, 2));
     },
     clearChatSlice: state => initialState,
   },

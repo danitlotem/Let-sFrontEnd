@@ -64,9 +64,7 @@ const SignUp3 = ({route, navigation}) => {
   };
   const AddUserToDB = async event => {
     try {
-      console.log('--------3-------');
       const response = await axios.post(`${path}/auth/register`, signUpConfig);
-      console.log(response.data);
       if (response.data.hasOwnProperty('msg')) {
         console.error(response.data.msg);
       } else {
@@ -135,7 +133,6 @@ const SignUp3 = ({route, navigation}) => {
             color="#48D1CC"
             title="Continue"
             onPress={async () => {
-              console.log('SignUp config:', signUpConfig);
               updateState();
               if (await AddUserToDB())
                 navigation.navigate('SignUp4', {page: 'SignUp3'});

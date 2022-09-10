@@ -3,7 +3,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import styles from '../Styles/ChatStyle';
 import {
   View,
@@ -36,6 +36,8 @@ const Conversation = ({route}) => {
 
   const verifyToken = useSelector(state => state.configuration.token);
   const messageWaiting = useSelector(state => state.chat.messageWaiting);
+
+  const scrollViewRef = useRef();
 
   const dispatch = useDispatch();
   const getMessages = async () => {
@@ -88,7 +90,12 @@ const Conversation = ({route}) => {
       </View>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.View.chatFeed}>
-          <ScrollView style={{height: '80%'}}>
+          <ScrollView
+            ref={scrollViewRef}
+            onContentSizeChange={() =>
+              scrollViewRef.current.scrollToEnd({animated: true})
+            }
+            style={{height: '80%'}}>
             {messages.length > 0 ? (
               messages.map((item, index) =>
                 myId === item.sender_user_id ? (
