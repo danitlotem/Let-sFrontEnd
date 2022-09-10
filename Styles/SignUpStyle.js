@@ -46,9 +46,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 10,
   },
-  notValidField: {
+  inValidField: {
     left: 10,
-    color: 'red',
+    color: '#525252',
     justifyContent: 'space-between',
   },
   nameInput: {
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   viewStyle: {
-    backgroundColor: '#FFFFFF', // birthday,hobbies
+    backgroundColor: '#FFFFFF',
     alignSelf: 'center',
     padding: 7,
     margin: 5,
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   signUpHobbies: {
-    backgroundColor: '#EBEBEB', // birthday,hobbies
+    backgroundColor: '#EBEBEB',
     marginLeft: 30,
     padding: 7,
     color: Theme.secondColor,
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
   },
   invalidText: {
     left: 45,
-    color: 'red',
+    color: '#525252',
   },
 
   chipBlock: {

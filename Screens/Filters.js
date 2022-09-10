@@ -72,7 +72,7 @@ const CustomFiltersBar = props => {
     props.navigation.closeDrawer();
   };
   const onClear = () => {
-    dispatch(clearFilters()); // the conponent isnt renders
+    dispatch(clearFilters());
   };
 
   return (

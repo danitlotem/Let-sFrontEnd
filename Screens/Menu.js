@@ -1,9 +1,7 @@
-/* eslint-disable no-alert */
 /* eslint-disable react-native/no-inline-styles */
 // eslint-disable-next-line no-unused-vars
 import React from 'react';
 import {SafeAreaView, View, Text, Pressable, Image} from 'react-native';
-
 import {DrawerItemList} from '@react-navigation/drawer';
 import styles from '../Styles/MenuStyle';
 import {useSelector, useDispatch} from 'react-redux';
@@ -13,9 +11,8 @@ import Theme from '../Styles/Theme';
 import {StackActions} from '@react-navigation/native';
 import {clearConfigurationSlice} from '../store/Slices/configurationSlice';
 import {clearChatSlice} from '../store/Slices/chatSlice';
-import {clearGeneralSlice} from '../store/Slices/generalSlice';
+import {clearGeneralSlice, changeStatus} from '../store/Slices/generalSlice';
 import {clearPeopleSlice} from '../store/Slices/peopleSlice';
-import {changeStatus} from '../store/Slices/generalSlice';
 
 const CustomSidebarMenu = props => {
   const navigation = useNavigation();
@@ -38,7 +35,7 @@ const CustomSidebarMenu = props => {
       dispatch(changeStatus({status: 'disconnect'}));
       navigation.navigate('Log In stack');
     } catch (error) {
-      alert(error);
+      console.error(error);
     }
   };
 

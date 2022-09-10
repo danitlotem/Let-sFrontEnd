@@ -104,9 +104,8 @@ const UserItem = props => {
           },
         },
       );
-      console.log(res.data);
     } catch (err) {
-      alert(err);
+      console.error(err);
     }
   };
   const onPressType = type => {
@@ -126,12 +125,13 @@ const UserItem = props => {
 
   return (
     <View style={styles.UserItem}>
-      {/* <UserProfile
+      <UserProfile
         visible={visible}
         setVisible={setVisible}
         {...props}
         closeModal={hideModal}
-      /> */}
+        config={config}
+      />
 
       <Pressable
         onPress={() => {
@@ -184,9 +184,11 @@ const UserItem = props => {
                 justifyContent: 'space-between',
               }}>
               <Text style={styles.friendAge}>age: {config.age}</Text>
-              <Text style={styles.friendAge}>
-                {parseInt(config.distance, 10)}m
-              </Text>
+              {config.distance !== null && (
+                <Text style={styles.friendAge}>
+                  {parseInt(config.distance, 10)}m
+                </Text>
+              )}
             </View>
             <View style={{marginTop: 5}}>
               <Text>Search mode: {config.search_mode} </Text>

@@ -1,6 +1,6 @@
-/* eslint-disable no-alert */
+/* eslint-disable react-hooks/exhaustive-deps */
 // eslint-disable-next-line no-unused-vars
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {View, Pressable, Text} from 'react-native';
 import NotificationItem from '../Components/NotificationItem';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -18,7 +18,7 @@ const Notifications = () => {
   const path = getCurrentPath();
   const verifyToken = useSelector(state => state.configuration.token);
 
-  const showNotifications = async userNum => {
+  const showNotifications = async () => {
     try {
       const res = await axios.get(
         `${path}/notifications/${userConfig.user_id}`,
@@ -30,13 +30,12 @@ const Notifications = () => {
       );
       dispatch(setNotificatation({myNotification: res.data}));
     } catch (error) {
-      alert(error);
+      console.error(error);
     }
   };
 
   useEffect(() => {
     showNotifications();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

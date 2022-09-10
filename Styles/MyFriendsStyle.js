@@ -85,10 +85,6 @@ const styles = StyleSheet.create({
       top: 20,
     },
   },
-  // scroll: {
-  //   height: 200,
-  //   padding: 7,
-  // },
 });
 
 export default styles;

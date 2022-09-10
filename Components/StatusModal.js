@@ -1,4 +1,3 @@
-/* eslint-disable no-alert */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
@@ -10,8 +9,6 @@ import axios from 'axios';
 import styles from '../Styles/StatusModal';
 import Theme from '../Styles/Theme';
 import {getCurrentPath} from '../utils/generalFunctions';
-//FIX ME
-//! maybe turn the opacity into a button include the featurs
 
 const StatusModal = props => {
   useEffect(() => {}, []);
@@ -26,7 +23,7 @@ const StatusModal = props => {
       });
       dispatch(updateMyStatus({status: myStatus}));
     } catch (err) {
-      alert(err);
+      console.error(err);
     }
   };
   return (

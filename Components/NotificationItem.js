@@ -4,34 +4,11 @@ import React from 'react';
 import {View, Text, Pressable} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import styles from '../Styles/NotificationStyle';
-import axios from 'axios';
-import Theme from '../Styles/Theme';
-import {getCurrentPath} from '../utils/generalFunctions';
+
 const NotificationItem = props => {
-  const seen = props.details.seen;
-  const path = getCurrentPath();
-  const id = props.details.notification_id;
   return (
-    <View
-      style={{
-        // backgroundColor: '#B0D0D9',
-        width: '90%',
-        marginTop: 5,
-        justifyContent: 'space-between',
-        flexDirection: 'row',
-        padding: 10,
-        elevation: 10,
-        marginBottom: 5,
-        borderRadius: 5,
-        borderColor: '#fff',
-        borderWidth: 1.5,
-        backgroundColor: seen !== 1 ? Theme.highLightColor : 'white',
-      }}>
-      <Pressable
-        style={styles.Pressables}
-        onPress={async () => {
-          const res = await axios.put(`${path}/notifications/${id}`);
-        }}>
+    <View style={styles.item}>
+      <Pressable style={styles.Pressables}>
         <Ionicons name="close-outline" size={35} color={'#0E6070'} />
         <Ionicons
           name="notifications-outline"
@@ -46,7 +23,6 @@ const NotificationItem = props => {
           <Text style={styles.body}>{props.details.content}</Text>
         </View>
         <View>
-          {/* BUG - OUT OF SCREEN RANGE */}
           <Text>{props.details.creation_date}</Text>
         </View>
       </View>

@@ -37,9 +37,6 @@ const Radius = props => {
                   updateOneFilter({filter: 'radius_filter', item: value}),
                 );
               }}
-              // onComplete={value => {
-              //   console.log('COMPLETE', value);
-              // }}
               width={50}
               height={300}
               step={100}

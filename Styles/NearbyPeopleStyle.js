@@ -40,33 +40,6 @@ const styles = StyleSheet.create({
       left: 5,
     },
   },
-
-  // filterIconSection: {
-  //   backgroundColor: '#0E6070',
-  //   height: 30,
-  //   alignItems: 'center',
-  // },
-  // filterIcon: {
-  //   height: 18,
-  //   width: 18,
-  //   margin: 7,
-  // },
-  // menuPic: {
-  //   top: 20,
-  //   height: 18,
-  //   width: 18,
-  // },
-  // textInput: {
-  //   top: 70,
-  //   padding: 4,
-  //   justifyContent: 'center',
-  //   width: 320,
-  //   alignSelf: 'center',
-  //   backgroundColor: '#fff',
-  //   borderColor: 'darkgray',
-  //   borderWidth: 1,
-  //   borderRadius: 5,
-  // },
 });
 
 export default styles;

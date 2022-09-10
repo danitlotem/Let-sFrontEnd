@@ -44,7 +44,6 @@ const styles = StyleSheet.create({
       maxWidth: '70%',
       marginLeft: 18,
       alignSelf: 'flex-start',
-      // flexDirection: 'row',
     },
     myMessage: {
       backgroundColor: Theme.backgroundColor,
@@ -102,6 +101,7 @@ const styles = StyleSheet.create({
 
   Text: {
     title: {
+      alignSelf: 'center',
       fontSize: 22,
       color: Theme.secondColor,
       fontFamily: Theme.fontFamilyBold,
@@ -129,7 +129,6 @@ const styles = StyleSheet.create({
     },
     MessageBody: {
       fontFamily: Theme.fontFamilyRegular,
-      // color: Theme.backgroundColor,
     },
     myMessageTime: {
       color: '#FFFFFF',
@@ -150,18 +149,6 @@ const styles = StyleSheet.create({
       bottom: 0,
     },
   },
-  // messageForm: {
-  //   width: '95%',
-  //   borderRadius: 6,
-  //   position: 'absolute',
-  // },
-
-  // dateContainer: {
-  //   justifyContent: 'center',
-  //   position: 'absolute',
-  //   right: -20,
-  //   alignSelf: 'center',
-  // },
 });
 
 export default styles;

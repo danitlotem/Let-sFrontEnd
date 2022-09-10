@@ -51,18 +51,16 @@ const LogIn = ({navigation}) => {
 
   const onSubmitFormHandler = async () => {
     try {
-      console.log('1', email, password, deviceToken);
+      console.log('--- connection details: --- ', email, password, deviceToken);
       const response = await axios.post(`${path}/auth/login`, {
         email: email,
         password: password,
         device_token: deviceToken,
       });
-      console.log('****', response.data);
       if (response.data.hasOwnProperty('msg')) {
         alert(response.data.msg);
       } else {
         try {
-          console.log('2');
           const getUser = await axios.get(
             `${path}/userConfiguration/${response.data.user_id}`,
             {
@@ -84,11 +82,11 @@ const LogIn = ({navigation}) => {
           dispatch(changeStatus({status: 'connected'}));
           navigation.navigate('HomeStack');
         } catch (error) {
-          alert(error);
+          console.error(error);
         }
       }
     } catch (error) {
-      alert(error);
+      console.error(error);
     }
   };
 

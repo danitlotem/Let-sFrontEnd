@@ -1,11 +1,10 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-unused-vars */
-/* eslint-disable no-alert */
 import React, {useState, useEffect} from 'react';
 import {View, Text, Image, Pressable} from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useSelector, useDispatch} from 'react-redux';
-import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import {
   updateMainPictuer,
@@ -15,17 +14,14 @@ import styles from '../../Styles/SignUpStyle';
 import Theme from '../../Styles/Theme';
 import {getCurrentPath} from '../../utils/generalFunctions';
 
-const SignUp4 = route => {
-  const page = route.params;
-
+const SignUp4 = ({route, navigation}) => {
+  const {page} = route.params;
   const path = getCurrentPath();
   const [image1, setImage1] = useState({});
   const [image2, setImage2] = useState({});
   const [image3, setImage3] = useState({});
   const conf = useSelector(state => state.configuration.userConfig);
   const dispatch = useDispatch();
-  const navigation = useNavigation();
-  const signUpConfig = useSelector(state => state.configuration.signUpConfig);
   const verifyToken = useSelector(state => state.configuration.token);
 
   useEffect(() => {
@@ -42,7 +38,7 @@ const SignUp4 = route => {
           console.log('ImagePicker Error: ', response.error);
         } else if (response.customButton) {
           console.log('User tapped custom button: ', response.customButton);
-          alert(response.customButton);
+          console.error(response.customButton);
         } else {
           if (num === 1) setImage1({...response.assets[0]});
           if (num === 2) setImage2({...response.assets[0]});
@@ -75,16 +71,32 @@ const SignUp4 = route => {
       );
       if (image2 !== {}) {
         //FIX ME - maybe image1 is not main image
-        await axios.post(`${path}/userPictures/${conf.user_id}`, {
-          base64image: image2.base64,
-          main_image: '0',
-        });
+        await axios.post(
+          `${path}/userPictures/${conf.user_id}`,
+          {
+            base64image: image2.base64,
+            main_image: '0',
+          },
+          {
+            headers: {
+              Authorization: 'Bearer ' + verifyToken,
+            },
+          },
+        );
       }
       if (image3 !== {}) {
-        await axios.post(`${path}/userPictures/${conf.user_id}`, {
-          base64image: image3.base64,
-          main_image: '0',
-        });
+        await axios.post(
+          `${path}/userPictures/${conf.user_id}`,
+          {
+            base64image: image3.base64,
+            main_image: '0',
+          },
+          {
+            headers: {
+              Authorization: 'Bearer ' + verifyToken,
+            },
+          },
+        );
       }
     } catch (error) {
       console.error(error);
@@ -168,8 +180,9 @@ const SignUp4 = route => {
                 marginTop: 10,
               }}
               onPress={() => {
-                console.log(page);
-                navigation.navigate(page);
+                page === 'SignUp3'
+                  ? navigation.navigate('Log In Stack')
+                  : navigation.navigate('MyProfile');
               }}>
               <Text
                 style={{

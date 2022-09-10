@@ -3,7 +3,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-alert */
 import React, {useEffect} from 'react';
 import styles from '../Styles/ChatStyle';
 import {
@@ -16,7 +15,6 @@ import {
   Image,
 } from 'react-native';
 import {getCurrentPath} from '../utils/generalFunctions';
-
 import MessageForm from '../Components/Chat/MessageForm';
 import MyMessage from '../Components/Chat/MyMessage';
 import TheirMessage from '../Components/Chat/TheirMessage';
@@ -29,26 +27,24 @@ import {useNavigation} from '@react-navigation/native';
 
 const Conversation = ({route}) => {
   const path = getCurrentPath();
-
   const navigation = useNavigation();
   const friendId = route.params.friendConfig.user_id;
   const friendImage = route.params.friendConfig.image;
   const friendName = `${route.params.friendConfig.first_name} ${route.params.friendConfig.last_name}`;
   const myId = useSelector(state => state.configuration.userConfig.user_id);
   const messages = useSelector(state => state.chat.currChat);
+
   const verifyToken = useSelector(state => state.configuration.token);
   const messageWaiting = useSelector(state => state.chat.messageWaiting);
-  console.log(messages);
+
   const dispatch = useDispatch();
   const getMessages = async () => {
-    //FIX ME there is a problem with update list of open chats
     try {
       const res = await axios.get(`${path}/chats/${myId}/${friendId}/0`, {
         headers: {
           Authorization: 'Bearer ' + verifyToken,
         },
       });
-      console.log(res.data);
       if (res.data.hasOwnProperty('msg')) {
         dispatch(
           setCurrentChat({
@@ -63,18 +59,14 @@ const Conversation = ({route}) => {
         );
       }
     } catch (error) {
-      alert(error);
+      console.error(error);
     }
   };
 
   useEffect(() => {
     getMessages();
-    dispatch(
-      newMessageWaiting({
-        messageWaiting: false,
-      }),
-    );
-  }, [messageWaiting]); //FIX ME
+    dispatch(newMessageWaiting({messageWaiting: false}));
+  }, [messageWaiting]);
 
   return (
     <KeyboardAvoidingView style={styles.View.container}>
@@ -97,20 +89,28 @@ const Conversation = ({route}) => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.View.chatFeed}>
           <ScrollView style={{height: '80%'}}>
-            {messages.length > 0} &&
-            {messages?.map((item, index) => (
-              <View key={index}>
-                ({myId === item.sender_user_id} ? (
-                <MyMessage content={item?.content} time={item?.creation_date} />
+            {messages.length > 0 ? (
+              messages.map((item, index) =>
+                myId === item.sender_user_id ? (
+                  <View key={index}>
+                    <MyMessage
+                      content={item.content}
+                      time={item.creation_date}
+                    />
+                  </View>
                 ) : (
-                <TheirMessage
-                  friendName={friendName}
-                  content={item?.content}
-                  time={item?.creation_date}
-                />
-                ) )
-              </View>
-            ))}
+                  <View key={index}>
+                    <TheirMessage
+                      friendName={friendName}
+                      content={item.content}
+                      time={item.creation_date}
+                    />
+                  </View>
+                ),
+              )
+            ) : (
+              <Text>This is an empty chat</Text>
+            )}
           </ScrollView>
           <View style={styles.View.messageFormContainer}>
             <MessageForm friendID={friendId} />

@@ -6,12 +6,13 @@ const {height} = Dimensions.get('window');
 const styles = StyleSheet.create({
   View: {
     container: {
+      flex: 1,
       height: Theme.height,
       width: Theme.width,
       backgroundColor: Theme.backgroundColor,
     },
     innterContainer: {
-      flex: 1,
+      // flex: 1,
       alignItems: 'center',
       backgroundColor: 'white',
     },
@@ -21,7 +22,7 @@ const styles = StyleSheet.create({
     upArrowContainer: {
       alignSelf: 'flex-end',
       justifyContent: 'flex-end',
-      height: '100%',
+      // height: '100%',
       zIndex: 1,
       position: 'absolute',
       bottom: 10,
@@ -59,13 +60,13 @@ const styles = StyleSheet.create({
     },
   },
   Pressable: {
-    pressPic: {
-      alignSelf: 'center',
-      justifyContent: 'center',
-      height: 220,
-      width: 220,
-      top: 30,
-    },
+    // pressPic: {
+    //   alignSelf: 'center',
+    //   justifyContent: 'center',
+    //   height: 220,
+    //   width: 220,
+    //   // top: 30,
+    // },
     checkItOut: {
       backgroundColor: Theme.secondColor,
       width: 80,
@@ -77,17 +78,7 @@ const styles = StyleSheet.create({
       borderRadius: 5,
     },
   },
-  Image: {
-    myPic: {
-      height: 170,
-      width: 170,
-      alignSelf: 'center',
-      zIndex: 1,
-      borderColor: '#FFFFFF',
-      borderWidth: 3,
-      borderRadius: 85,
-    },
-  },
+
   ScrollView: {
     searchModeList: {
       backgroundColor: 'white',
@@ -108,9 +99,8 @@ const styles = StyleSheet.create({
 
   child: {
     width: width,
-    height: height - 24,
-
-    // justifyContent: 'center',
+    height: height,
+    flex: 1,
   },
   text: {
     color: '#FFFFFF',

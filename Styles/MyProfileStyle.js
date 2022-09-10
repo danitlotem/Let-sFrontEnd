@@ -49,6 +49,24 @@ const styles = StyleSheet.create({
 
       marginBottom: 30,
     },
+    uploadPhotos: {
+      backgroundColor: Theme.secondColor,
+      padding: 5,
+      margin: 3,
+      borderRadius: 7,
+    },
+    updateProfile: {
+      backgroundColor: Theme.highLightColor,
+      padding: 5,
+      margin: 3,
+      borderRadius: 7,
+    },
+    updateMyDetails: {
+      backgroundColor: Theme.highLightColor,
+      elevation: 10,
+      borderRadius: 10,
+      padding: 7,
+    },
   },
   View: {
     photosContainer: {
@@ -58,6 +76,7 @@ const styles = StyleSheet.create({
     },
     emailPassword: {
       width: '100%',
+      marginTop: 10,
     },
     fullName: {
       width: '85%',
@@ -97,6 +116,10 @@ const styles = StyleSheet.create({
       borderWidth: 1,
       borderColor: 'white',
       elevation: 5,
+    },
+    updateMyDetails: {
+      margin: 10,
+      alignSelf: 'center',
     },
   },
 
@@ -139,6 +162,11 @@ const styles = StyleSheet.create({
     },
     dateText: {
       fontFamily: Theme.fontFamilyRegular,
+      alignItems: 'center',
+    },
+    updateMyDetails: {
+      color: '#000000',
+      fontFamily: Theme.fontFamilyBold,
     },
   },
   DatePicker: {
@@ -158,28 +186,18 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: 'white',
   },
-  // addPic: {
-  //   borderColor: '#0E6070',
-  //   borderWidth: 1,
-  //   borderRadius: 20,
-  //   height: 30,
-  //   width: 30,
-  //   justifyContent: 'center',
-  // },
-  // notValidField: {
-  //   left: 10,
-  //   color: 'red',
-  // },
-
-  // subText: {
-  //   alignSelf: 'center',
-  // },
-
-  // addPicSection: {
-  //   flexDirection: 'column',
-  //   top: 30,
-  //   alignItems: 'center',
-  // },
+  TextInput: {
+    emailInput: {
+      fontSize: 18,
+      width: '85%',
+      elevation: 10,
+      alignSelf: 'center',
+      backgroundColor: '#CCCCCC',
+      borderRadius: 5,
+      color: '#000000',
+      fontFamily: Theme.fontFamilyRegular,
+    },
+  },
 });
 
 export default styles;

@@ -36,10 +36,12 @@ export const peopleSlice = createSlice({
 });
 
 export const {
+  searchFriend,
   updateNearbyPeople,
   updateMyFriends,
-  searchFriend,
+  updateSendRequests,
   updateUsersBySearchModes,
+  updateReceivedRequests,
   clearPeopleSlice,
 } = peopleSlice.actions;
 

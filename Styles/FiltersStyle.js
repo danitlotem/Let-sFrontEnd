@@ -79,8 +79,6 @@ const styles = StyleSheet.create({
   Pressable: {
     searchPressable: {
       backgroundColor: Theme.secondColor,
-      // borderWidth: 1,
-      // borderColor: Theme.backgroundColor,
       justifyContent: 'center',
       alignSelf: 'center',
       width: 150,
@@ -97,6 +95,9 @@ const styles = StyleSheet.create({
       borderRadius: 5,
       height: 40,
       flexDirection: 'row',
+    },
+    itemsInModal: {
+      marginTop: 20,
     },
   },
   FilterItem: {

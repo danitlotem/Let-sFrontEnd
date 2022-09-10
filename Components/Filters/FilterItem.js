@@ -56,7 +56,6 @@ const FilterItem = props => {
           <Pressable
             onPress={() => {
               dispatch(updateOneFilter({filter: filter, item: props.arr[0]}));
-              //props.function(props.arr[0]);
             }}>
             <Ionicons
               color={Theme.backgroundColor}

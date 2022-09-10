@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-useless-escape */
 import React, {useState} from 'react';
-import {View, Text, ScrollView, Button, Pressable} from 'react-native';
+import {View, Text, Button, Pressable} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import styles from '../../Styles/SignUpStyle';
 import TInput from '../../Components/TInput';
@@ -34,17 +34,12 @@ function SignUp1({navigation}) {
 
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
-  // const [firstName, setFirstName] = useState('');
-  // const [lastName, setLastName] = useState('');
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
-  // const [city, setCity] = useState('');
-  // const [profession, setProfession] = useState('');
-  // const [phoneNumber, setPhoneNumber] = useState('');
 
   const [isFirstNameValid, setFirstNameValid] = useState(true);
   const [isLastNameValid, setLastNameValid] = useState(true);
   const [isEmailValid, setEmailValid] = useState(true);
+  const [isPasswordValid, setPasswordValid] = useState(true);
+  const [continuePressed, setContinuePressed] = useState(false);
   const dispatch = useDispatch();
   var day = date.getDate();
   var month = date.getMonth() + 1;
@@ -60,18 +55,31 @@ function SignUp1({navigation}) {
     );
   };
 
-  const validateEmail = () => {
-    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-    if (reg.test(email) === false) {
+  const validateEmail = val => {
+    if (val.length === 0) {
       setEmailValid(false);
     } else {
-      setEmailValid(true);
+      let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+      if (reg.test(val) === false) {
+        setEmailValid(false);
+      } else {
+        setEmailValid(true);
+        setContinuePressed(false);
+      }
     }
   };
 
+  const validatePassword = val => {
+    if (val.length === 0) {
+      setPasswordValid(false);
+      return;
+    }
+    val.length === 0 ? setPasswordValid(false) : setPasswordValid(true);
+  };
   const validateName = (name, setValid) => {
     if (!/[^a-zA-Z]/.test(name)) {
       setValid(true);
+      setContinuePressed(false);
     } else {
       setValid(false);
     }
@@ -89,7 +97,6 @@ function SignUp1({navigation}) {
   };
 
   const updateState = () => {
-    console.log(configuration);
     dispatch(updateConfiguration({signUpConfig: {...configuration}}));
   };
 
@@ -103,12 +110,18 @@ function SignUp1({navigation}) {
             value={first_name}
             title={'First Name'}
             onChangeText={val => {
+              setContinuePressed(false);
               dispatch(updateOneSignUpConfig({key: 'first_name', value: val}));
               validateName(val, setFirstNameValid);
             }}
           />
-          {!isFirstNameValid && (
-            <Text style={styles.notValidField}>not valid</Text>
+          {continuePressed &&
+          (first_name?.length === 0 || first_name === undefined) ? (
+            <Text style={styles.inValidField}>required</Text>
+          ) : (
+            !isFirstNameValid && (
+              <Text style={styles.inValidField}>invalid first name</Text>
+            )
           )}
         </View>
         <View style={styles.column}>
@@ -117,12 +130,18 @@ function SignUp1({navigation}) {
             value={last_name}
             title={'Last Name'}
             onChangeText={val => {
+              setContinuePressed(false);
               dispatch(updateOneSignUpConfig({key: 'last_name', value: val}));
               validateName(val, setLastNameValid);
             }}
           />
-          {!isLastNameValid && (
-            <Text style={styles.notValidField}>not valid</Text>
+          {continuePressed &&
+          (last_name?.length === 0 || last_name === undefined) ? (
+            <Text style={styles.inValidField}>required</Text>
+          ) : (
+            !isLastNameValid && (
+              <Text style={styles.inValidField}>invalid last name</Text>
+            )
           )}
         </View>
       </View>
@@ -133,11 +152,18 @@ function SignUp1({navigation}) {
             value={email}
             title={'Email'}
             onChangeText={val => {
+              setContinuePressed(false);
               dispatch(updateOneSignUpConfig({key: 'email', value: val}));
               validateEmail(val);
             }}
           />
-          {!isEmailValid && <Text style={styles.invalidText}>invalid</Text>}
+          {continuePressed && (email?.length === 0 || email === undefined) ? (
+            <Text style={styles.invalidText}>required</Text>
+          ) : (
+            !isEmailValid && (
+              <Text style={styles.invalidText}>invalid email</Text>
+            )
+          )}
         </View>
         <TInput
           style={styles.textInput}
@@ -145,9 +171,19 @@ function SignUp1({navigation}) {
           title={'Password'}
           secureTextEntry={true}
           onChangeText={val => {
+            setContinuePressed(false);
             dispatch(updateOneSignUpConfig({key: 'password', value: val}));
+            validatePassword(val);
           }}
         />
+        {continuePressed &&
+        (password?.length === 0 || password === undefined) ? (
+          <Text style={styles.invalidText}>required</Text>
+        ) : (
+          !isPasswordValid && (
+            <Text style={styles.invalidText}>invalid password</Text>
+          )
+        )}
       </View>
       <TInput
         style={styles.textInput}
@@ -192,8 +228,16 @@ function SignUp1({navigation}) {
           color="#48D1CC"
           title="Continue"
           onPress={() => {
+            setContinuePressed(true);
             updateState();
-            navigation.navigate('SignUp2');
+
+            if (
+              isFirstNameValid &&
+              isLastNameValid &&
+              isEmailValid &&
+              isPasswordValid
+            )
+              navigation.navigate('SignUp2');
           }}
         />
       </View>

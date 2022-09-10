@@ -9,6 +9,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Theme from '../../Styles/Theme';
 import {updateOneFilter} from '../../store/Slices/configurationSlice';
 import {useDispatch} from 'react-redux';
+
 const AgeItem = props => {
   const config = useSelector(state => state.configuration.userConfig);
   const [visible, setVisible] = useState(false);
@@ -51,7 +52,6 @@ const AgeItem = props => {
       {/* filter item */}
       <View style={styles.FilterItem.item}>
         <Pressable style={styles.FilterItem.itemPressable} onPress={showModal}>
-          {/* FIX ME -  stateFilters.age_filter !== [] only after apply*/}
           <Text style={styles.FilterItem.valueItemText}>
             {min}-{max}
           </Text>

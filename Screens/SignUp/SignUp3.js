@@ -2,7 +2,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-prototype-builtins */
-/* eslint-disable no-alert */
 import React, {useState} from 'react';
 import {View, Text, ScrollView, Button, Pressable, Image} from 'react-native';
 import styles from '../../Styles/SignUpStyle';
@@ -66,16 +65,16 @@ const SignUp3 = ({route, navigation}) => {
   const AddUserToDB = async event => {
     try {
       console.log('--------3-------');
-      console.log(signUpConfig);
       const response = await axios.post(`${path}/auth/register`, signUpConfig);
+      console.log(response.data);
       if (response.data.hasOwnProperty('msg')) {
-        alert(response.data.msg);
+        console.error(response.data.msg);
       } else {
-        console.log('response.data:', response.data);
         dispatch(updateUserId({user_id: response.data.user_id}));
       }
+      return true;
     } catch (error) {
-      alert(error);
+      console.error(error);
     }
   };
   const addToList = val => {
@@ -136,9 +135,10 @@ const SignUp3 = ({route, navigation}) => {
             color="#48D1CC"
             title="Continue"
             onPress={async () => {
+              console.log('SignUp config:', signUpConfig);
               updateState();
-              await AddUserToDB();
-              navigation.navigate('SignUp4', {page: 'SignUp3'});
+              if (await AddUserToDB())
+                navigation.navigate('SignUp4', {page: 'SignUp3'});
             }}
           />
         </View>

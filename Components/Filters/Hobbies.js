@@ -75,7 +75,6 @@ const Hobbies = props => {
                   {element.lst.map((item, index) => {
                     return (
                       <TouchableOpacity
-                        //FIX ME reRender on press
                         style={hobbiesListItemStyle(item)}
                         key={index}
                         onPress={() => addToList(item)}>

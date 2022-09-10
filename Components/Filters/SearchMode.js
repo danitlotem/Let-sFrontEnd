@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, {useState} from 'react';
@@ -14,10 +15,11 @@ const searchModeItems = props => {
   const hideModal = () => setVisible(false);
   const modes = useSelector(state => state.general.rawText.filters.Search_Mode);
   const dispatch = useDispatch();
+
   const items = modes.map((item, index) => {
     return (
       <Pressable
-        style={{marginTop: 20}}
+        style={styles.itemsInModal}
         key={index}
         onPress={() => {
           dispatch(updateOneFilter({filter: props.filter, item: item}));

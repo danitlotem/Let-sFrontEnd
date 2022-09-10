@@ -1,4 +1,3 @@
-/* eslint-disable no-prototype-builtins */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
@@ -13,7 +12,6 @@ const ChatItem = props => {
   const navigation = useNavigation();
 
   return (
-    //FIX ME how to move to certain conversation with certain user
     <Pressable
       style={styles.Pressable.item}
       onPress={() => {
@@ -29,7 +27,9 @@ const ChatItem = props => {
       </Pressable>
       <View style={styles.View.row}>
         <View style={styles.View.Details}>
-          <Text adjustsFontSizeToFit style={styles.Text.title}>
+          <Text
+            adjustsFontSizeToFit
+            style={{...styles.Text.title, alignSelf: 'baseline'}}>
             {data.first_name} {data.last_name}
           </Text>
           {data.content ? (

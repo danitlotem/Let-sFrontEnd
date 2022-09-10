@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, {useState} from 'react';
-import {View, Text, ScrollView, Button} from 'react-native';
+import {View, Text, Button} from 'react-native';
 import {Chip} from 'react-native-paper';
 import styles from '../../Styles/SignUpStyle';
 import Theme from '../../Styles/Theme';
@@ -16,8 +16,6 @@ function SignUp2({navigation}) {
   const [pronoun, setPronoun] = useState(0);
   const dispatch = useDispatch();
   const signUpConfig = useSelector(state => state.configuration.signUpConfig);
-  console.log('----------2----------');
-  console.log(signUpConfig);
   const chipStyle = (value, chip) => {
     return {
       borderRadius: 7,
@@ -76,7 +74,7 @@ function SignUp2({navigation}) {
         </View>
       </View>
       <View style={styles.catagory}>
-        <Text style={styles.catagoryText}>I prefer to be called</Text>
+        <Text style={styles.catagoryText}>My sexual orientation</Text>
         <View style={styles.chipBlock}>
           {rawText.sexual_orientation.map((item, index) => {
             return (

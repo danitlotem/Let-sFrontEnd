@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-/* eslint-disable no-alert */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable no-unused-vars */
 import React, {useEffect} from 'react';
@@ -13,29 +12,43 @@ import {updateReceivedRequests} from '../store/Slices/peopleSlice';
 const MyFriendRequests = props => {
   const listOfConf = useSelector(state => state.people.receivedRequests);
   const userConfig = useSelector(state => state.configuration.userConfig);
+  const verifyToken = useSelector(state => state.configuration.token);
+
   const user_id = userConfig.user_id;
   const path = getCurrentPath();
   const dispatch = useDispatch();
   const onAccept = async userNum => {
     try {
-      await axios.post(`${path}/friendRequest/approve/${user_id}/${userNum}`);
+      await axios.post(
+        `${path}/friendRequest/approve/${user_id}/${userNum}`,
+        {},
+        {
+          headers: {
+            authorization: 'bearer ' + verifyToken,
+          },
+        },
+      );
       getMyFriendRequest(); //FIX ME
     } catch (error) {
-      alert(error);
+      console.error(error);
     }
   };
 
   const getMyFriendRequest = async () => {
-    console.log(`${path}/friendRequest/receivedRequests/${user_id}`);
     try {
       const friends = await axios.get(
         `${path}/friendRequest/receivedRequests/${user_id}`,
+        {
+          headers: {
+            authorization: 'bearer ' + verifyToken,
+          },
+        },
       );
       if (!friends.data.hasOwnProperty('msg')) {
         dispatch(updateReceivedRequests({requests: [...friends.data]}));
       }
     } catch (error) {
-      alert(error);
+      console.error(error);
     }
   };
 
@@ -50,7 +63,7 @@ const MyFriendRequests = props => {
         onPress={() => props.setVisible(false)}>
         <Text>X</Text>
       </Pressable>
-      <Text>My friend request</Text>
+      <Text>My friend requests</Text>
       {listOfConf &&
         listOfConf.map(item => {
           return (

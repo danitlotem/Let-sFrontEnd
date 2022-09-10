@@ -26,7 +26,6 @@ const styles = StyleSheet.create({
   },
 
   textItem: {
-    // color: item === props.value ? 'red' : '#1B8AA0',
     color: '#1B8AA0',
     backgroundColor: '#ffff',
     elevation: 5,

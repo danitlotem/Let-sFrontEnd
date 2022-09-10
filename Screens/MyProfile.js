@@ -1,7 +1,7 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable radix */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-alert */
 import React, {useEffect, useState} from 'react';
 import {
   View,
@@ -10,6 +10,7 @@ import {
   Image,
   ScrollView,
   Pressable,
+  TextInput,
 } from 'react-native';
 import {Chip} from 'react-native-paper';
 import Hobbies from '../Components/Filters/Hobbies';
@@ -22,26 +23,28 @@ import UpperBar from '../Components/UpperBar';
 import Theme from '../Styles/Theme';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {getCurrentPath} from '../utils/generalFunctions';
-const MyProfile = () => {
+
+const MyProfile = props => {
   const path = getCurrentPath();
   const [edit, setEdit] = useState(false);
   const [photos, setPhotos] = useState([]);
-  const email = useSelector(state => state.configuration.email);
   const userConfig = useSelector(state => state.configuration.userConfig);
+  const email = useSelector(state => state.configuration.email);
+  let tempConfig = userConfig;
   const rawText = useSelector(state => state.general.rawText.registration_form);
   const myhobbies = useSelector(state => state.configuration.myHobbies);
   let birthday = userConfig.date_of_birth;
 
   birthday = birthday.split('-');
-  const [mode, setMode] = useState('date');
+  const mode = 'date';
   const [show, setShow] = useState(false);
   const navigation = useNavigation();
+  const verifyToken = useSelector(state => state.configuration.token);
   var year = birthday[0];
   var month = birthday[1];
-  var day = parseInt(birthday[2].slice(0, 2)) + 1;
+  var day = parseInt(birthday[2].slice(0, 2));
   year = year.toString();
   const [date, setDate] = useState(new Date(year, month, day));
-  const verifyToken = useSelector(state => state.configuration.token);
 
   const getPhotos = async () => {
     try {
@@ -55,7 +58,7 @@ const MyProfile = () => {
       );
       setPhotos(res.data);
     } catch (error) {
-      alert(error);
+      console.error(error);
     }
   };
   const onChangeDate = (event, selectedDate) => {
@@ -74,7 +77,7 @@ const MyProfile = () => {
   };
   const chipTextColor = (value, chip) => {
     return {
-      color: value === chip ? Theme.backgroundColor : '#2C143E',
+      color: value === chip ? Theme.secondColor : '#2C143E',
       fontFamily: Theme.fontFamilyRegular,
     };
   };
@@ -98,27 +101,17 @@ const MyProfile = () => {
           <View>
             {/* FIX ME - navigate to signUp4 */}
             <Pressable
-              style={{
-                backgroundColor: Theme.secondColor,
-                padding: 5,
-                margin: 3,
-                borderRadius: 7,
-              }}
+              style={styles.Pressable.uploadPhotos}
               onPress={() =>
                 navigation.navigate('UploadPictures', {
-                  page: 'myProfile',
+                  page: 'my Profile',
                 })
               }>
               <Text>upload photos</Text>
             </Pressable>
 
             <Pressable
-              style={{
-                backgroundColor: Theme.highLightColor,
-                padding: 5,
-                margin: 3,
-                borderRadius: 7,
-              }}
+              style={styles.Pressable.updateProfile}
               onPress={() => {
                 if (edit === true) {
                   //NOTICE - add api call - update conficuration
@@ -132,11 +125,14 @@ const MyProfile = () => {
         </View>
         <View style={styles.View.emailPassword}>
           <View style={styles.View.column}>
-            <TInput
-              style={styles.TInput.textInput}
+            <TextInput
+              style={styles.TextInput.textInput}
               value={email}
-              title={'Email'}
-              editable={edit}
+              placeholder={'Email'}
+              outlineColor={'#13869D'}
+              underlineColor="#13869D"
+              dense={true}
+              onChangeText={val => props.onChangeText(val)}
             />
           </View>
         </View>
@@ -144,7 +140,7 @@ const MyProfile = () => {
           <View style={styles.View.column}>
             <TInput
               style={styles.TInput.nameInput}
-              value={userConfig.first_name}
+              value={tempConfig.first_name}
               title={'First Name'}
               editable={edit}
             />
@@ -152,7 +148,7 @@ const MyProfile = () => {
           <View style={styles.View.column}>
             <TInput
               style={styles.TInput.nameInput}
-              value={userConfig.last_name}
+              value={tempConfig.last_name}
               title={'Last Name'}
               editable={edit}
             />
@@ -161,13 +157,13 @@ const MyProfile = () => {
         <TInput
           style={styles.TInput.textInput}
           title={`Phone number`}
-          value={userConfig.phone_number}
+          value={tempConfig.phone_number}
           editable={edit}
         />
         <TInput
           style={styles.TInput.textInput}
           title={`City`}
-          value={userConfig.city}
+          value={tempConfig.city}
           editable={edit}
         />
         <TInput
@@ -183,8 +179,8 @@ const MyProfile = () => {
               return (
                 <Chip
                   key={item}
-                  style={chipStyle(userConfig.gender, item)}
-                  textStyle={chipTextColor(userConfig.gender, item)}>
+                  style={chipStyle(tempConfig.gender, item)}
+                  textStyle={chipTextColor(tempConfig.gender, item)}>
                   {item}
                 </Chip>
               );
@@ -192,15 +188,15 @@ const MyProfile = () => {
           </View>
         </View>
         <View>
-          <Text style={styles.Text.catagoryText}>I prefer to be called</Text>
+          <Text style={styles.Text.catagoryText}>My sexual orientation</Text>
           <View style={styles.View.chipsBlocks}>
             {rawText.sexual_orientation.map(item => {
               return (
                 <Chip
                   key={item}
-                  style={chipStyle(userConfig.sexual_orientation, item)}
+                  style={chipStyle(tempConfig.sexual_orientation, item)}
                   textStyle={chipTextColor(
-                    userConfig.sexual_orientation,
+                    tempConfig.sexual_orientation,
                     item,
                   )}>
                   {item}
@@ -216,8 +212,8 @@ const MyProfile = () => {
               return (
                 <Chip
                   key={item}
-                  style={chipStyle(userConfig.pronoun, item)}
-                  textStyle={chipTextColor(userConfig.pronoun, item)}>
+                  style={chipStyle(tempConfig.pronoun, item)}
+                  textStyle={chipTextColor(tempConfig.pronoun, item)}>
                   {item}
                 </Chip>
               );
@@ -230,8 +226,8 @@ const MyProfile = () => {
             return (
               <Chip
                 key={item}
-                style={chipStyle(userConfig.relationship_status, item)}
-                textStyle={chipTextColor(userConfig.relationship_status, item)}>
+                style={chipStyle(tempConfig.relationship_status, item)}
+                textStyle={chipTextColor(tempConfig.relationship_status, item)}>
                 {item}
               </Chip>
             );
@@ -271,6 +267,11 @@ const MyProfile = () => {
           />
         </View>
       </ScrollView>
+      <View style={styles.View.updateMyDetails}>
+        <Pressable style={styles.Pressable.updateMyDetails}>
+          <Text style={styles.Text.updateMyDetails}>update my details</Text>
+        </Pressable>
+      </View>
     </SafeAreaView>
   );
 };

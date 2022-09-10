@@ -1,11 +1,13 @@
-/* eslint-disable no-alert */
 import {eventChannel} from 'redux-saga';
 import {select, call, take, put} from 'redux-saga/effects';
 import {newMessageWaiting, addMessageToChat} from '../store/Slices/chatSlice';
+import {refreshOnlineUsers} from '../store/Slices/generalSlice';
 import {getCurrentSocketPath} from './generalFunctions';
+
 const getToken = state => state.configuration.token;
 const getMyID = state => state.configuration.userConfig.user_id;
 const path = getCurrentSocketPath();
+
 function socketService(token) {
   return eventChannel(emitter => {
     const socket = new WebSocket(`${path}`, null, {
@@ -19,13 +21,19 @@ function socketService(token) {
         console.log('SOCKET CONNECTED');
       };
       socket.onmessage = event => {
-        console.log('EVENT DATA: ', event.data);
-        return emitter({type: newMessageWaiting.type, payload: true});
-        // return emitter({type: newMessageWaiting.type, payload: event.data});
+        if (
+          JSON.parse(event.data).msg === 'New User Connected' ||
+          JSON.parse(event.data).msg === 'User Disconnected'
+        ) {
+          return emitter({type: refreshOnlineUsers.type, payload: true});
+        } else {
+          return emitter({type: newMessageWaiting.type, payload: event.data});
+        }
+      };
+      socket.onclose = () => {
+        console.log('SOCKET CLOSED');
       };
     }
-
-    // The subscriber must return an unsubscribe function
     return () => {
       console.log('Socket off');
     };
@@ -40,11 +48,20 @@ export function* watchSocket() {
   try {
     while (true) {
       let data = yield take(requestChan);
-      let theirMessage = JSON.parse(data.payload);
-      if (theirMessage.receiver_user_id === myID)
-        yield put(addMessageToChat({myMessage: theirMessage}));
+      console.log('***DATA:', data);
+      if (data.type === refreshOnlineUsers.type) {
+        yield put(refreshOnlineUsers(true));
+      }
+      if (data.type === newMessageWaiting.type) {
+        let theirMessage = JSON.parse(data.payload);
+        console.log('----2: socket----');
+        console.log(theirMessage);
+        if (theirMessage.receiver_user_id === myID) {
+          yield put(addMessageToChat({myMessage: theirMessage}));
+        }
+      }
     }
   } catch (err) {
-    alert(err);
+    console.error(err);
   }
 }

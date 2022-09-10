@@ -28,7 +28,6 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // width: 140,
   },
   valueItemText: {
     fontSize: 16,

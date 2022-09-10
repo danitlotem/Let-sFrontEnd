@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-/* eslint-disable no-alert */
 import React, {useEffect} from 'react';
 import {View, Text} from 'react-native';
 import ChatItem from '../Components/Chat/ChatItem';
@@ -10,7 +9,7 @@ import axios from 'axios';
 import {useSelector, useDispatch} from 'react-redux';
 import {openChats} from '../store/Slices/chatSlice';
 import {getCurrentPath} from '../utils/generalFunctions';
-import Theme from '../Styles/Theme';
+
 const Chat = () => {
   const path = getCurrentPath();
   const myUserId = useSelector(state => state.configuration.userConfig.user_id);
@@ -19,8 +18,6 @@ const Chat = () => {
   const dispatch = useDispatch();
 
   const getAllChats = async () => {
-    //FIX ME there is a problem with update list of open chats
-
     try {
       const res = await axios.get(`${path}/chats/${myUserId}`, {
         headers: {
@@ -29,7 +26,7 @@ const Chat = () => {
       });
       dispatch(openChats({OpenChats: res.data}));
     } catch (error) {
-      alert(error);
+      console.error(error);
     }
   };
 
@@ -42,15 +39,7 @@ const Chat = () => {
       <View style={styles.View.UpperBarContainer}>
         <UpperBar />
       </View>
-      <Text
-        style={{
-          alignSelf: 'center',
-          fontSize: 22,
-          color: Theme.secondColor,
-          fontFamily: Theme.fontFamilyBold,
-        }}>
-        my Chats
-      </Text>
+      <Text style={styles.Text.title}>my Chats</Text>
       <View style={styles.View.chatListContainer}>
         {chats?.map((item, index) => (
           <ChatItem key={index} data={item} />

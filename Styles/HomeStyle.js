@@ -8,7 +8,6 @@ const styles = StyleSheet.create({
       backgroundColor: Theme.backgroundColor,
     },
     innterContainer: {
-      
       alignItems: 'center',
       flexDirection: 'row',
     },

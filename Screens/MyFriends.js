@@ -1,13 +1,12 @@
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-alert */
 // eslint-disable-next-line no-unused-vars
 import React, {useState, useEffect} from 'react';
 import {
   View,
   TextInput,
   Text,
-  SafeAreaView,
+  ScrollView,
   Pressable,
   Modal,
 } from 'react-native';
@@ -21,6 +20,7 @@ import MyFriendRequests from '../Components/MyFriendRequests';
 import UpperBar from '../Components/UpperBar';
 import {updateMyFriends, searchFriend} from '../store/Slices/peopleSlice';
 import {getCurrentPath} from '../utils/generalFunctions';
+
 const MyFriends = () => {
   const path = getCurrentPath();
   const [friendName, setFriendName] = useState(friendToSearch);
@@ -43,13 +43,14 @@ const MyFriends = () => {
           },
         },
       );
-      dispatch(
-        updateMyFriends({
-          myFriends: friends.data,
-        }),
-      );
+      console.log('MY Friends:', friends.data),
+        dispatch(
+          updateMyFriends({
+            myFriends: friends.data,
+          }),
+        );
     } catch (error) {
-      alert(error);
+      console.error(error);
     }
   };
 
@@ -109,14 +110,12 @@ const MyFriends = () => {
           </Text>
         </Pressable>
       </View>
-      <SafeAreaView style={styles.SafeAreaView.listOfConfContainer}>
+      <ScrollView style={styles.SafeAreaView.listOfConfContainer}>
         {!listOfConf.hasOwnProperty('msg') &&
-          listOfConf.map(item => {
-            return (
-              <UserItem config={item} key={`${item.user_id}`} type={'friend'} />
-            );
+          listOfConf.map((item, index) => {
+            return <UserItem config={item} key={index} type={'friend'} />;
           })}
-      </SafeAreaView>
+      </ScrollView>
     </View>
   );
 };

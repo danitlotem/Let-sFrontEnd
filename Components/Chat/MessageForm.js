@@ -1,6 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/prop-types */
-/* eslint-disable no-alert */
 /* eslint-disable no-unused-vars */
 import React, {useState} from 'react';
 import {View, Pressable} from 'react-native';
@@ -11,31 +10,39 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import TInput from '../TInput';
 import {addMessageToChat} from '../../store/Slices/chatSlice';
 import {getCurrentPath} from '../../utils/generalFunctions';
+
 const MessageForm = props => {
   const myUserId = useSelector(state => state.configuration.userConfig.user_id);
   const [message, setMessage] = useState('');
-  const messages = useSelector(state => state.chat.currChat);
   const dispatch = useDispatch();
   const path = getCurrentPath();
   const verifyToken = useSelector(state => state.configuration.token);
 
+  function onlyLettersAndNumbers(thisMessage) {
+    return /^[A-Za-z0-9]*$/.test(thisMessage);
+  }
+
   const HandleSubmit = async () => {
     try {
-      const myMessage = await axios.post(
-        `${path}/messages/${myUserId}/${props.friendID}`,
-        {
-          content: message,
-        },
-        {
-          headers: {
-            Authorization: 'Bearer ' + verifyToken,
+      console.log();
+      if (message.length !== 0 && onlyLettersAndNumbers(message)) {
+        const myMessage = await axios.post(
+          `${path}/messages/${myUserId}/${props.friendID}`,
+          {
+            content: message,
           },
-        },
-      );
-      dispatch(addMessageToChat({myMessage: myMessage.data[0]}));
+          {
+            headers: {
+              Authorization: 'Bearer ' + verifyToken,
+            },
+          },
+        );
+
+        dispatch(addMessageToChat({myMessage: myMessage.data}));
+      }
       setMessage('');
     } catch (error) {
-      alert(error);
+      console.error(error);
     }
   };
 

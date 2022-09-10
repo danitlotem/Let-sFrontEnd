@@ -1,6 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-alert */
 /* eslint-disable react/prop-types */
 // eslint-disable-next-line no-unused-vars
 import React, {useEffect, useState} from 'react';
@@ -43,7 +42,7 @@ const NearbyPeople = ({navigation}) => {
       );
       dispatch(updateNearbyPeople({nearbyPeople: people.data}));
     } catch (err) {
-      alert(err);
+      console.error(err);
       console.log(err);
     }
   };
@@ -55,18 +54,22 @@ const NearbyPeople = ({navigation}) => {
 
   const onFriendRequest = async userNum => {
     try {
-      await axios.post(`${path}/friendRequest/send/${user_id}/${userNum}`, {
-        headers: {
-          Authorization: 'Bearer ' + verifyToken,
+      await axios.post(
+        `${path}/friendRequest/send/${user_id}/${userNum}`,
+        {},
+        {
+          headers: {
+            Authorization: 'Bearer ' + verifyToken,
+          },
         },
-      });
+      );
       onApplyHandler(); //FIX ME?
     } catch (error) {
-      alert(error);
+      console.error(error);
     }
   };
 
-  const mappingUsers = (item, index) => {
+  const mappingUsers = nearbyPeople.map((item, index) => {
     if (item.mutualConnections === 1) {
       return (
         <UserItem
@@ -105,7 +108,7 @@ const NearbyPeople = ({navigation}) => {
         />
       );
     }
-  };
+  });
 
   return (
     <View style={styles.View.container}>
@@ -127,7 +130,7 @@ const NearbyPeople = ({navigation}) => {
 
       <View>
         <ScrollView style={styles.ScrollView.scroll}>
-          {nearbyPeople.map((item, index) => mappingUsers(item, index))}
+          {mappingUsers}
           {Object.keys(nearbyPeople).length === 0 && (
             <Text style={{color: 'white'}}>No people</Text>
           )}
