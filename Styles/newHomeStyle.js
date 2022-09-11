@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
       color: '#FFFFFF',
       fontFamily: Theme.fontFamilyBold,
       fontSize: 28,
+      width: '80%',
     },
 
     peopleInTheArea: {

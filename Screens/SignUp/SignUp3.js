@@ -24,9 +24,9 @@ import {getCurrentPath} from '../../utils/generalFunctions';
 const SignUp3 = ({route, navigation}) => {
   const path = getCurrentPath();
   const dispatch = useDispatch();
-  const myHobbies = useSelector(state => state.configuration.myHobbies);
-  const hobbies = useSelector(state => state.general.rawText.Hobbies);
-  const signUpConfig = useSelector(state => state.configuration.signUpConfig);
+  const myHobbies = useSelector(state => state.configuration?.myHobbies);
+  const hobbies = useSelector(state => state.general.rawText?.Hobbies);
+  const signUpConfig = useSelector(state => state.configuration?.signUpConfig);
 
   const getImages = item => {
     if (item === 'Sport')
@@ -62,8 +62,9 @@ const SignUp3 = ({route, navigation}) => {
   const updateState = () => {
     dispatch(updateConfiguration({signUpConfig: {...configuration}}));
   };
-  const AddUserToDB = async event => {
+  const AddUserToDB = async () => {
     try {
+      console.log(signUpConfig);
       const response = await axios.post(`${path}/auth/register`, signUpConfig);
       if (response.data.hasOwnProperty('msg')) {
         console.error(response.data.msg);

@@ -75,7 +75,6 @@ export const configurationSlice = createSlice({
 
     clearFilters: state => {
       state.filters = {...initialState.filters};
-      console.log('cleared');
     },
     clearHobbies: state => {
       state.myHobbies = [];

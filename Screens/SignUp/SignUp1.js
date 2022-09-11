@@ -14,31 +14,31 @@ import {
 
 function SignUp1({navigation}) {
   const first_name = useSelector(
-    state => state.configuration.signUpConfig.first_name,
+    state => state.configuration.signUpConfig?.first_name,
   );
   const last_name = useSelector(
-    state => state.configuration.signUpConfig.last_name,
+    state => state.configuration.signUpConfig?.last_name,
   );
-  const email = useSelector(state => state.configuration.signUpConfig.email);
+  const email = useSelector(state => state.configuration.signUpConfig?.email);
   const password = useSelector(
-    state => state.configuration.signUpConfig.password,
+    state => state.configuration.signUpConfig?.password,
   );
-  const city = useSelector(state => state.configuration.signUpConfig.city);
+  const city = useSelector(state => state.configuration.signUpConfig?.city);
   const profession = useSelector(
-    state => state.configuration.signUpConfig.profession,
+    state => state.configuration.signUpConfig?.profession,
   );
   const phone_number = useSelector(
-    state => state.configuration.signUpConfig.phone_number,
+    state => state.configuration.signUpConfig?.phone_number,
   );
   const [date, setDate] = useState(new Date());
 
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
 
-  const [isFirstNameValid, setFirstNameValid] = useState(true);
-  const [isLastNameValid, setLastNameValid] = useState(true);
-  const [isEmailValid, setEmailValid] = useState(true);
-  const [isPasswordValid, setPasswordValid] = useState(true);
+  const [isFirstNameValid, setFirstNameValid] = useState(false);
+  const [isLastNameValid, setLastNameValid] = useState(false);
+  const [isEmailValid, setEmailValid] = useState(false);
+  const [isPasswordValid, setPasswordValid] = useState(false);
   const [continuePressed, setContinuePressed] = useState(false);
   const dispatch = useDispatch();
   var day = date.getDate();
@@ -70,14 +70,12 @@ function SignUp1({navigation}) {
   };
 
   const validatePassword = val => {
-    if (val.length === 0) {
-      setPasswordValid(false);
-      return;
-    }
     val.length === 0 ? setPasswordValid(false) : setPasswordValid(true);
   };
   const validateName = (name, setValid) => {
-    if (!/[^a-zA-Z]/.test(name)) {
+    if (name.length === 0) {
+      setValid(false);
+    } else if (!/[^a-zA-Z]/.test(name)) {
       setValid(true);
       setContinuePressed(false);
     } else {
@@ -119,7 +117,8 @@ function SignUp1({navigation}) {
           (first_name?.length === 0 || first_name === undefined) ? (
             <Text style={styles.inValidField}>required</Text>
           ) : (
-            !isFirstNameValid && (
+            !isFirstNameValid &&
+            continuePressed && (
               <Text style={styles.inValidField}>invalid first name</Text>
             )
           )}
@@ -139,7 +138,8 @@ function SignUp1({navigation}) {
           (last_name?.length === 0 || last_name === undefined) ? (
             <Text style={styles.inValidField}>required</Text>
           ) : (
-            !isLastNameValid && (
+            !isLastNameValid &&
+            continuePressed && (
               <Text style={styles.inValidField}>invalid last name</Text>
             )
           )}
@@ -160,7 +160,8 @@ function SignUp1({navigation}) {
           {continuePressed && (email?.length === 0 || email === undefined) ? (
             <Text style={styles.invalidText}>required</Text>
           ) : (
-            !isEmailValid && (
+            !isEmailValid &&
+            continuePressed && (
               <Text style={styles.invalidText}>invalid email</Text>
             )
           )}
@@ -180,7 +181,8 @@ function SignUp1({navigation}) {
         (password?.length === 0 || password === undefined) ? (
           <Text style={styles.invalidText}>required</Text>
         ) : (
-          !isPasswordValid && (
+          !isPasswordValid &&
+          continuePressed && (
             <Text style={styles.invalidText}>invalid password</Text>
           )
         )}
@@ -236,8 +238,9 @@ function SignUp1({navigation}) {
               isLastNameValid &&
               isEmailValid &&
               isPasswordValid
-            )
+            ) {
               navigation.navigate('SignUp2');
+            }
           }}
         />
       </View>

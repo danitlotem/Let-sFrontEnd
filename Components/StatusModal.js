@@ -12,15 +12,25 @@ import {getCurrentPath} from '../utils/generalFunctions';
 
 const StatusModal = props => {
   useEffect(() => {}, []);
-  const [myStatus, setStatus] = useState('enter your status...');
-  const dispatch = useDispatch();
-  const user_id = useSelector(state => state.configuration.userConfig.user_id);
   const path = getCurrentPath();
+  const dispatch = useDispatch();
+  const [myStatus, setStatus] = useState('enter your status...');
+  const user_id = useSelector(state => state.configuration.userConfig.user_id);
+  const verifyToken = useSelector(state => state.configuration.token);
+
   const updateStatus = async () => {
     try {
-      const res = await axios.post(`${path}/userStatus/${user_id}`, {
-        status: myStatus,
-      });
+      const res = await axios.post(
+        `${path}/userStatus/${user_id}`,
+        {
+          status: myStatus,
+        },
+        {
+          headers: {
+            Authorization: 'Bearer ' + verifyToken,
+          },
+        },
+      );
       dispatch(updateMyStatus({status: myStatus}));
     } catch (err) {
       console.error(err);

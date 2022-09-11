@@ -21,10 +21,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   itemsContainer: {
-    alignItems: 'center',
+    alignSelf: 'center',
+    width: '100%',
   },
   item: {
     width: '90%',
+    marginHorizontal: 10,
     marginTop: 10,
     justifyContent: 'space-between',
     flexDirection: 'row',

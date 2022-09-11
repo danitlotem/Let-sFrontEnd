@@ -49,11 +49,12 @@ export function* watchSocket() {
     while (true) {
       let data = yield take(requestChan);
       if (data.type === refreshOnlineUsers.type) {
-        yield put(refreshOnlineUsers(true));
+        yield put(refreshOnlineUsers());
       }
       if (data.type === newMessageWaiting.type) {
         let theirMessage = JSON.parse(data.payload);
         if (theirMessage.receiver_user_id === myID) {
+          yield put(newMessageWaiting({messageWaiting: false}));
           yield put(addMessageToChat({myMessage: theirMessage}));
         }
       }

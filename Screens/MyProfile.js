@@ -16,30 +16,33 @@ import {Chip} from 'react-native-paper';
 import Hobbies from '../Components/Filters/Hobbies';
 import TInput from '../Components/TInput';
 import styles from '../Styles/MyProfileStyle';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import UpperBar from '../Components/UpperBar';
 import Theme from '../Styles/Theme';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {getCurrentPath} from '../utils/generalFunctions';
+// import {setMyImages} from '../store/Slices/generalSlice';
+import {getMyPictures} from '../store/Slices/picturesSlice';
 
 const MyProfile = props => {
   const path = getCurrentPath();
   const [edit, setEdit] = useState(false);
-  const [photos, setPhotos] = useState([]);
+  const photos = useSelector(state => state.pictures.myPictures);
   const userConfig = useSelector(state => state.configuration.userConfig);
   const email = useSelector(state => state.configuration.email);
   let tempConfig = userConfig;
-  const rawText = useSelector(state => state.general.rawText.registration_form);
+  const rawText = useSelector(
+    state => state.general.rawText?.registration_form,
+  );
   const myhobbies = useSelector(state => state.configuration.myHobbies);
   let birthday = userConfig.date_of_birth;
-
+  const dispatch = useDispatch();
   birthday = birthday.split('-');
   const mode = 'date';
   const [show, setShow] = useState(false);
   const navigation = useNavigation();
-  const verifyToken = useSelector(state => state.configuration.token);
   var year = birthday[0];
   var month = birthday[1];
   var day = parseInt(birthday[2].slice(0, 2));
@@ -48,15 +51,8 @@ const MyProfile = props => {
 
   const getPhotos = async () => {
     try {
-      const res = await axios.get(
-        `${path}/userPictures/${userConfig.user_id}`,
-        {
-          headers: {
-            Authorization: 'Bearer ' + verifyToken,
-          },
-        },
-      );
-      setPhotos(res.data);
+      const res = await axios.get(`${path}/userPictures/${userConfig.user_id}`);
+      dispatch(getMyPictures({myPictures: [...res.data]}));
     } catch (error) {
       console.error(error);
     }
@@ -86,20 +82,21 @@ const MyProfile = props => {
       <UpperBar />
       <ScrollView>
         <View style={styles.View.photosContainer}>
-          {photos.map((item, index) => {
-            return (
-              <View key={index}>
-                <Pressable>
-                  <Image
-                    style={styles.Image.myPic}
-                    source={{uri: `data:image/gif;base64,${item.image}`}}
-                  />
-                </Pressable>
-              </View>
-            );
-          })}
-          <View>
-            {/* FIX ME - navigate to signUp4 */}
+          <ScrollView style={{flex: 1, marginLeft: 30}} horizontal={true}>
+            {photos.map((item, index) => {
+              return (
+                <View style={{margin: 3}} key={index}>
+                  <Pressable>
+                    <Image
+                      style={styles.Image.myPic}
+                      source={{uri: `data:image/gif;base64,${item.image}`}}
+                    />
+                  </Pressable>
+                </View>
+              );
+            })}
+          </ScrollView>
+          <View style={{marginRight: 30}}>
             <Pressable
               style={styles.Pressable.uploadPhotos}
               onPress={() =>
@@ -107,7 +104,7 @@ const MyProfile = props => {
                   page: 'my Profile',
                 })
               }>
-              <Text>upload photos</Text>
+              <Text style={{color: '#FFFFFF'}}>upload photos</Text>
             </Pressable>
 
             <Pressable
@@ -124,17 +121,16 @@ const MyProfile = props => {
           </View>
         </View>
         <View style={styles.View.emailPassword}>
-          <View style={styles.View.column}>
-            <TextInput
-              style={styles.TextInput.textInput}
-              value={email}
-              placeholder={'Email'}
-              outlineColor={'#13869D'}
-              underlineColor="#13869D"
-              dense={true}
-              onChangeText={val => props.onChangeText(val)}
-            />
-          </View>
+          <TextInput
+            style={styles.TextInput.emailInput}
+            value={email}
+            editable={false}
+            placeholder={'Email'}
+            outlineColor={'#13869D'}
+            underlineColor="#13869D"
+            dense={true}
+            onChangeText={val => props.onChangeText(val)}
+          />
         </View>
         <View style={styles.View.fullName}>
           <View style={styles.View.column}>
@@ -168,7 +164,7 @@ const MyProfile = props => {
         />
         <TInput
           style={styles.TInput.textInput}
-          title={`Proffesion`}
+          title={`Profession`}
           value={userConfig.profession}
           editable={edit}
         />

@@ -11,6 +11,7 @@ import {useSelector} from 'react-redux';
 import styles from '../Styles/UserProfile';
 import {getCurrentPath} from '../utils/generalFunctions';
 import Theme from '../Styles/Theme';
+import {Keyframe} from 'react-native-reanimated';
 
 const UserProfile = props => {
   const config = props.config;
@@ -31,6 +32,7 @@ const UserProfile = props => {
     }
   };
   useEffect(() => {
+    //FIX ME - delay until modal is pressed
     getPhotos();
   }, []);
 

@@ -26,19 +26,8 @@ const styles = StyleSheet.create({
       width: 80,
       alignSelf: 'center',
     },
-    penPic: {
-      right: 10,
-      height: 25,
-      width: 25,
-      color: Theme.highLightColor,
-    },
   },
   Pressable: {
-    touchablePen: {
-      justifyContent: 'flex-end',
-      width: 30,
-      height: 30,
-    },
     Pressables: {
       backgroundColor: 'white',
       borderRadius: 5,
@@ -46,20 +35,25 @@ const styles = StyleSheet.create({
       height: 35,
       width: '80%',
       marginTop: 10,
-
       marginBottom: 30,
     },
     uploadPhotos: {
       backgroundColor: Theme.secondColor,
       padding: 5,
       margin: 3,
+      borderWidth: 2,
+      borderColor: '#FFFFFF',
       borderRadius: 7,
+      elevation: 5,
     },
     updateProfile: {
       backgroundColor: Theme.highLightColor,
       padding: 5,
       margin: 3,
+      borderWidth: 2,
+      borderColor: '#FFFFFF',
       borderRadius: 7,
+      elevation: 5,
     },
     updateMyDetails: {
       backgroundColor: Theme.highLightColor,
@@ -71,8 +65,7 @@ const styles = StyleSheet.create({
   View: {
     photosContainer: {
       flexDirection: 'row',
-      justifyContent: 'space-around',
-      alignItems: 'center',
+      // alignItems: 'center',
     },
     emailPassword: {
       width: '100%',
@@ -134,9 +127,10 @@ const styles = StyleSheet.create({
       height: 40,
       alignSelf: 'center',
       marginTop: 10,
-      backgroundColor: 'white',
+      backgroundColor: '#FFFFFF',
       elevation: 10,
       borderRadius: 10,
+      justifyContent: 'flex-start',
     },
     nameInput: {
       width: 150,
@@ -188,14 +182,15 @@ const styles = StyleSheet.create({
   },
   TextInput: {
     emailInput: {
-      fontSize: 18,
       width: '85%',
-      elevation: 10,
+      height: 40,
       alignSelf: 'center',
-      backgroundColor: '#CCCCCC',
+      marginTop: 10,
+      backgroundColor: '#FFFFFF',
+      elevation: 10,
       borderRadius: 5,
-      color: '#000000',
-      fontFamily: Theme.fontFamilyRegular,
+      justifyContent: 'flex-start',
+      fontSize: 16,
     },
   },
 });

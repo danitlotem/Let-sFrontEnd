@@ -24,7 +24,6 @@ const MessageForm = props => {
 
   const HandleSubmit = async () => {
     try {
-      console.log();
       if (message.length !== 0 && onlyLettersAndNumbers(message)) {
         const myMessage = await axios.post(
           `${path}/messages/${myUserId}/${props.friendID}`,

@@ -6,8 +6,8 @@
 // eslint-disable-next-line no-unused-vars
 import React, {useState, useEffect} from 'react';
 import {View, Text, Pressable, Image} from 'react-native';
-import {useDispatch} from 'react-redux';
 import styles from '../Styles/LogInStyle';
+import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
 import TInput from '../Components/TInput';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -25,6 +25,7 @@ const LogIn = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [validEmail, setValidEmail] = useState(false);
   const dispatch = useDispatch();
+  const status = useSelector(state => state.general?.status);
 
   const getFcmToken = async event => {
     const fcmtoken = await AsyncStorage.getItem('fcmtoken');
@@ -93,48 +94,56 @@ const LogIn = ({navigation}) => {
     dispatch(clearSignUpConfig());
     navigation.navigate('SignUp');
   };
-  return (
-    <View style={styles.container}>
-      <View style={styles.LogInForm}>
-        <View style={{alignSelf: 'center', marginBottom: 30}}>
-          <Image
-            style={{height: 100, width: 250}}
-            source={require(`../assets/Images/LOGO.png`)}
+  if (status === 'accepted')
+    return (
+      <View style={styles.container}>
+        <View style={styles.LogInForm}>
+          <View style={{alignSelf: 'center', marginBottom: 30}}>
+            <Image
+              style={{height: 100, width: 250}}
+              source={require(`../assets/Images/LOGO.png`)}
+            />
+          </View>
+          <TInput
+            title={'Email'}
+            value={email}
+            style={styles.textInput}
+            secureTextEntry={false}
+            onChangeText={value => handleEmail(value)}
+          />
+          <TInput
+            title={'Password'}
+            value={password}
+            secureTextEntry={true}
+            style={styles.textInput}
+            onChangeText={text => setPassword(text)}
           />
         </View>
-        <TInput
-          title={'Email'}
-          value={email}
-          style={styles.textInput}
-          secureTextEntry={false}
-          onChangeText={value => handleEmail(value)}
-        />
-        <TInput
-          title={'Password'}
-          value={password}
-          secureTextEntry={true}
-          style={styles.textInput}
-          onChangeText={text => setPassword(text)}
-        />
+        <View style={styles.linkToRegister}>
+          <Text style={styles.dontHaveAUser}>Don`t have a user? </Text>
+          <Pressable onPress={reDirectToRegister}>
+            <Text style={styles.createAnAcountText}>Create an account</Text>
+          </Pressable>
+        </View>
+        <View style={styles.buttonSection}>
+          <Pressable
+            style={styles.button}
+            disabled={!validEmail}
+            onPress={() => {
+              onSubmitFormHandler();
+            }}>
+            <Text style={styles.buttonText}>Continue</Text>
+          </Pressable>
+        </View>
       </View>
-      <View style={styles.linkToRegister}>
-        <Text style={styles.dontHaveAUser}>Don`t have a user? </Text>
-        <Pressable onPress={reDirectToRegister}>
-          <Text style={styles.createAnAcountText}>Create an account</Text>
-        </Pressable>
+    );
+  else {
+    return (
+      <View>
+        <Text>Loading...</Text>
       </View>
-      <View style={styles.buttonSection}>
-        <Pressable
-          style={styles.button}
-          disabled={!validEmail}
-          onPress={() => {
-            onSubmitFormHandler();
-          }}>
-          <Text style={styles.buttonText}>Continue</Text>
-        </Pressable>
-      </View>
-    </View>
-  );
+    );
+  }
 };
 
 export default LogIn;

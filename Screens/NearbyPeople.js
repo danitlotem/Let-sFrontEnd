@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 // eslint-disable-next-line no-unused-vars
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {View, Text, ScrollView, Pressable} from 'react-native';
 import UserItem from '../Components/userItem';
 import UpperBar from '../Components/UpperBar';
@@ -22,13 +22,16 @@ const NearbyPeople = ({navigation}) => {
   const user_id = userConfig.user_id;
   const filters = useSelector(state => state.configuration.filters);
   const nearbyPeople = useSelector(state => state.people.nearbyPeople);
+  const refresh = useSelector(state => state.general.refresh);
+
   const dispatch = useDispatch();
   const showFilters = () => {
     navigation.openDrawer();
   };
   const verifyToken = useSelector(state => state.configuration.token);
-  const onApplyHandler = async () => {
+  const onApplyHandler = useCallback(async () => {
     try {
+      console.log('!');
       const people = await axios.post(
         `${path}/filters/${user_id}/${
           filters.online_filter === true ? '1' : '0'
@@ -45,12 +48,14 @@ const NearbyPeople = ({navigation}) => {
       console.error(err);
       console.log(err);
     }
-  };
+  }, [user_id, filters, refresh]);
 
   useEffect(() => {
     onApplyHandler();
+  }, [user_id, filters, refresh]);
+  useEffect(() => {
     setVisible(true);
-  }, [user_id, filters, dispatch]);
+  }, [user_id, filters]);
 
   const onFriendRequest = async userNum => {
     try {
@@ -68,7 +73,22 @@ const NearbyPeople = ({navigation}) => {
       console.error(error);
     }
   };
-
+  const onAccept = async userNum => {
+    try {
+      await axios.post(
+        `${path}/friendRequest/approve/${user_id}/${userNum}`,
+        {},
+        {
+          headers: {
+            authorization: 'bearer ' + verifyToken,
+          },
+        },
+      );
+      // getMyFriendRequest(); //FIX ME
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const mappingUsers = nearbyPeople.map((item, index) => {
     if (item.mutualConnections === 1) {
       return (
@@ -95,6 +115,7 @@ const NearbyPeople = ({navigation}) => {
           config={item}
           name={`${item.first_name} ${item.last_name}`}
           type={'requestsUserRecieved'}
+          function={onAccept}
         />
       );
     } else if (item.notConnected === 1) {

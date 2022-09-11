@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
       margin: 5,
       alignSelf: 'center',
       borderRadius: 5,
-      width: '75%',
+      width: '70%',
       borderWidth: 1,
       borderColor: Theme.highLightColor,
       elevation: 5,
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     },
     itemPressable: {
       justifyContent: 'center',
-      width: 160,
+      width: 150,
     },
     valueItemText: {
       fontSize: 16,

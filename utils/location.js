@@ -6,9 +6,14 @@ import {setMyLocation} from '../store/Slices/generalSlice';
 import axios from 'axios';
 import {getCurrentPath} from '../utils/generalFunctions';
 
+const options = {
+  enableHighAccuracy: true,
+  timeout: 5000,
+  maximumAge: 0,
+};
 const getUserId = state => state.configuration.userConfig.user_id;
-const getToken = state => state.configuration.token;
-const path = getCurrentPath();
+const getToken = state => state.configuration.userConfig.token;
+
 const checkLocationPermission = async () => {
   try {
     const granted = await PermissionsAndroid.request(
@@ -28,59 +33,60 @@ const checkLocationPermission = async () => {
   }
 };
 
-export const getMyLocation = async () => {
+//FIX ME - change accurency to 5 meters
+const getMyLocation = async () => {
   return new Promise((resolve, reject) => {
-    Geolocation.getCurrentPosition(resolve, reject, {
-      enableHighAccuracy: true,
-      timeout: 5000,
-      maximumAge: 0,
-    });
+    Geolocation.getCurrentPosition(resolve, reject, options);
   });
 };
+const sendLocation = async (id, latitude, longitude, token) => {
+  const path = getCurrentPath();
 
-const postLocation = async (verifyToken, myUserId, mylongitude, mylatitude) => {
-  return await axios.post(
-    `${path}/userLocation/${myUserId}`,
-    {
-      longitude: mylongitude,
-      latitude: mylatitude,
-    },
-    {
-      headers: {
-        Authorization: 'Bearer ' + verifyToken,
+  try {
+    const res = await axios.post(
+      `${path}/userLocation/${id}`,
+      {
+        longitude: longitude,
+        latitude: latitude,
       },
-    },
-  );
+      {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      },
+    );
+  } catch (err) {
+    console.error(err);
+  }
 };
-
-export function* sendLocation(myUserId, mylongitude, mylatitude) {
-  const verifyToken = yield select(getToken);
-  const resPost = yield call(
-    postLocation,
-    verifyToken,
-    myUserId,
-    mylongitude,
-    mylatitude,
-  );
-}
-
 export function* getCurrentLocationSaga() {
-  const locationPermission = yield call(checkLocationPermission);
   const myUserId = yield select(getUserId);
+  const myToken = yield select(getToken);
+  const locationPermission = yield call(checkLocationPermission);
 
   console.log('locationPermission: ', locationPermission);
   if (locationPermission === 'Permission Granted') {
-    try {
-      setInterval(async () => {
-        const result = await getMyLocation();
-        const newLocation = await sendLocation(
-          myUserId,
-          result.coords.longitude,
-          result.coords.latitude,
-        );
-      }, 10000);
-    } catch (err) {
-      console.error(err);
-    }
+    console.log('1');
+    const result = yield call(getMyLocation);
+    console.log('PROMISE RESULT: ', result);
+
+    setInterval(async () => {
+      const result = await getMyLocation();
+      console.log('PROMISE RESULT: ', result);
+      put(
+        setMyLocation({
+          myLatitude: result.coords.longitude,
+          myLongitude: result.coords.latitude,
+        }),
+      );
+      sendLocation(
+        myUserId,
+        result.coords.longitude,
+        result.coords.latitude,
+        myToken,
+      );
+    }, 60000);
+
+    console.log('4');
   }
 }

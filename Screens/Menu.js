@@ -61,19 +61,23 @@ const CustomSidebarMenu = props => {
             <Text style={styles.emailText}>{email}</Text>
             <View style={styles.detailsContainer}>
               <Text style={styles.detailsText}>{mySearchMode}</Text>
-              <View
-                style={{
-                  alignSelf: 'center',
-                  justifyContent: 'center',
-                  flexDirection: 'row',
-                }}>
-                <Ionicons
-                  color={'#000000'}
-                  size={15}
-                  name={'chatbubble-ellipses-outline'}
-                />
-                <Text style={styles.detailsText}> {myStatus}</Text>
-              </View>
+              {myStatus ? (
+                <View
+                  style={{
+                    alignSelf: 'center',
+                    justifyContent: 'center',
+                    flexDirection: 'row',
+                  }}>
+                  <Ionicons
+                    color={'#000000'}
+                    size={15}
+                    name={'chatbubble-ellipses-outline'}
+                  />
+                  <Text style={styles.detailsText}>{myStatus}</Text>
+                </View>
+              ) : (
+                <View />
+              )}
             </View>
           </View>
         )}

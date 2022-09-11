@@ -8,7 +8,7 @@ const initialState = {
   myStatus: '',
   myNotification: [],
   constants: 'not accepted',
-  refresh: false,
+  refresh: 0,
 };
 
 export const generalSlice = createSlice({
@@ -37,9 +37,8 @@ export const generalSlice = createSlice({
       state.constants = 'accepted';
       console.log('CONSTANTS ACCEPTED');
     },
-    refreshOnlineUsers: (state, action) => {
-      console.log('** in refresh online users**');
-      state.refresh = action.payload;
+    refreshOnlineUsers: state => {
+      state.refresh = state.refresh + 1;
     },
   },
 });

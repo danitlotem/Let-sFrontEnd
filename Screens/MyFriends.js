@@ -1,7 +1,7 @@
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable react-hooks/exhaustive-deps */
 // eslint-disable-next-line no-unused-vars
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   TextInput,
@@ -31,8 +31,10 @@ const MyFriends = () => {
   const friendToSearch = useSelector(state => state.people.friendToSearch);
   const dispatch = useDispatch();
   const verifyToken = useSelector(state => state.configuration.token);
-
-  const FindFriend = async () => {
+  const refresh = useSelector(state => state.general.refresh);
+  const myLongitude = useSelector(state => state.general?.myLongitude);
+  const myLatitude = useSelector(state => state.general?.myLatitude);
+  const FindFriend = useCallback(async () => {
     try {
       const valToSearch = friendToSearch === '' ? '%20' : friendToSearch;
       const friends = await axios.get(
@@ -43,19 +45,26 @@ const MyFriends = () => {
           },
         },
       );
-        dispatch(
-          updateMyFriends({
-            myFriends: friends.data,
-          }),
-        );
+      dispatch(
+        updateMyFriends({
+          myFriends: friends.data,
+        }),
+      );
     } catch (error) {
       console.error(error);
     }
-  };
+  });
 
   useEffect(() => {
     FindFriend();
-  }, [friendToSearch, visibleMyRequests, visiblePendingRequests]);
+  }, [
+    friendToSearch,
+    visibleMyRequests,
+    visiblePendingRequests,
+    refresh,
+    myLongitude,
+    myLatitude,
+  ]);
 
   return (
     <View style={styles.View.container}>

@@ -24,7 +24,7 @@ const TInput = props => {
         secureTextEntry={props.secureTextEntry}
         outlineColor={'#13869D'}
         underlineColor="#13869D"
-        label={props.name}
+        // label={props.title}
         dense={true}
         onChangeText={val => props.onChangeText(val)}
       />

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-unused-vars */
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useCallback} from 'react';
 import {View, Text, ImageBackground, Pressable, Dimensions} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import styles from '../Styles/newHomeStyle';
@@ -11,6 +11,7 @@ import {SwiperFlatList} from 'react-native-swiper-flatlist';
 import Theme from '../Styles/Theme';
 import {updateFilters} from '../store/Slices/configurationSlice';
 import {updateUsersBySearchModes} from '../store/Slices/peopleSlice';
+import {refreshOnlineUsers} from '../store/Slices/generalSlice';
 import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {getCurrentPath} from '../utils/generalFunctions';
@@ -20,13 +21,17 @@ const Home = () => {
   const navigation = useNavigation();
   const path = getCurrentPath();
 
-  const myLongitude = useSelector(state => state.general.myLongitude);
-  const myLatitude = useSelector(state => state.general.myLatitude);
-  const refresh = useSelector(state => state.general.refresh);
-  const text = useSelector(state => state.general.rawText);
-  const data = useSelector(state => state.general.rawText.filters.Search_Mode);
-  const myUserId = useSelector(state => state.configuration.userConfig.user_id);
-  const verifyToken = useSelector(state => state.configuration.token);
+  const status = useSelector(state => state.general?.status);
+  const myLongitude = useSelector(state => state.general?.myLongitude);
+  const myLatitude = useSelector(state => state.general?.myLatitude);
+
+  const refresh = useSelector(state => state.general?.refresh);
+  const text = useSelector(state => state.general?.rawText);
+  const data = useSelector(state => state.general.rawText.filters?.Search_Mode);
+  const myUserId = useSelector(
+    state => state.configuration.userConfig?.user_id,
+  );
+  const verifyToken = useSelector(state => state.configuration?.token);
   const users = useSelector(state => state.people.usersBySearchModes);
   const HobText = text['Search Mode Sentences'];
 
@@ -42,7 +47,7 @@ const Home = () => {
     online_filter: true,
   };
 
-  const getUsersBySearchModes = async () => {
+  const getUsersBySearchModes = useCallback(async () => {
     try {
       const usersBySearchModes = await axios.get(
         `${path}/dataFromSetsToClient/experience/${myUserId}`,
@@ -58,10 +63,10 @@ const Home = () => {
     } catch (err) {
       console.error(err);
     }
-  };
+  });
 
   useEffect(() => {
-    getUsersBySearchModes();
+    if (status === 'connected') getUsersBySearchModes();
   }, [myLongitude, myLatitude, refresh]);
 
   const getImages = item => {

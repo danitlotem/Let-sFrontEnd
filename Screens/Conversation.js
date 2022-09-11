@@ -12,6 +12,7 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
+  Pressable,
   Image,
 } from 'react-native';
 import {getCurrentPath} from '../utils/generalFunctions';
@@ -22,7 +23,6 @@ import axios from 'axios';
 import {useDispatch, useSelector} from 'react-redux';
 import {setCurrentChat, newMessageWaiting} from '../store/Slices/chatSlice';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import {useNavigation} from '@react-navigation/native';
 
 const Conversation = ({route}) => {

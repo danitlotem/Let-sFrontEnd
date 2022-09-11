@@ -20,8 +20,8 @@ import signUpHobbies from '../../Styles/SignUpHobbies';
 import FiltersHobbies from '../../Styles/FiltersHobbies';
 import {updateHobbies} from '../../store/Slices/configurationSlice';
 const Hobbies = props => {
-  const listOfHobbies = useSelector(state => state.general.rawText.Hobbies);
-  const myHobbies = useSelector(state => state.configuration.myHobbies);
+  const listOfHobbies = useSelector(state => state.general.rawText?.Hobbies);
+  const myHobbies = useSelector(state => state.configuration?.myHobbies);
   const [visible, setVisible] = useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
@@ -102,7 +102,7 @@ const Hobbies = props => {
             <Text style={hobbiesStyle.valueItemText}>{props.text}</Text>
           </Pressable>
         </View>
-        <View style={{justifyContent: 'center'}}>
+        <View style={{justifyContent: 'flex-start'}}>
           <Pressable onPress={() => clearHobbies()}>
             <Ionicons
               color={Theme.backgroundColor}

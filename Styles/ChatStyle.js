@@ -19,9 +19,6 @@ const styles = StyleSheet.create({
       height: Theme.height,
       width: Theme.width,
     },
-    chatListContainer: {
-      marginTop: 50,
-    },
     container: {
       flex: 1,
     },
@@ -61,7 +58,7 @@ const styles = StyleSheet.create({
       paddingHorizontal: 10,
     },
     chatDetailsContainer: {
-      top: 10,
+      // top: 10,
       left: 10,
       padding: 7,
       flexDirection: 'row',

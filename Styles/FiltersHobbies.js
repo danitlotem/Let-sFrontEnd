@@ -18,12 +18,12 @@ const styles = StyleSheet.create({
     margin: 5,
     alignSelf: 'center',
     borderRadius: 5,
-    width: '75%',
+    width: '70%',
     elevation: 5,
   },
   itemPressable: {
     justifyContent: 'center',
-    width: 160,
+    width: 150,
   },
   item: {
     flexDirection: 'row',

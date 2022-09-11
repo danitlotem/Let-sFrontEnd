@@ -1,14 +1,11 @@
 /* eslint-disable require-yield */
-import {put, call, take, fork, all} from 'redux-saga/effects';
+import {put, call, take, fork} from 'redux-saga/effects';
 import axios from 'axios';
 import {getRawText} from '../Slices/generalSlice';
 import {getCurrentLocationSaga} from '../../utils/location';
 import {watchSocket} from '../../utils/socket';
 import {getCurrentPath} from '../../utils/generalFunctions';
 import {changeStatus} from '../Slices/generalSlice';
-// import {clearConfigurationSlice} from '../Slices/configurationSlice';
-// import {clearChatSlice} from '../Slices/chatSlice';
-// import {clearPeopleSlice} from '../Slices/peopleSlice';
 
 export function* helloApp() {
   console.log('WELCOME TO OUR APP!');
@@ -23,17 +20,20 @@ export function* getConstants() {
   try {
     const response = yield call(getData);
     yield put(getRawText({rawText: response.data}));
+    yield put(changeStatus({status: 'accepted'}));
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 }
 
 export function* rootSaga() {
   console.log('---------------START---------------');
-  yield all([helloApp(), getConstants()]);
+  yield call(helloApp);
 
-  console.log('---------Saga--------'); //FIX ME
+  // console.log('---------Saga--------');
   while (true) {
+    yield call(getConstants);
+    console.log('---------CONSTATNTS ACCEPTED----------');
     yield take(changeStatus.type);
     yield fork(getCurrentLocationSaga);
     yield fork(watchSocket);

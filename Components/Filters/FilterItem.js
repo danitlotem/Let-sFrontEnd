@@ -52,7 +52,7 @@ const FilterItem = props => {
             <Text style={styles.FilterItem.valueItemText}>{title}</Text>
           </Pressable>
         </View>
-        <View style={{justifyContent: 'center'}}>
+        <View style={{justifyContent: 'flex-start'}}>
           <Pressable
             onPress={() => {
               dispatch(updateOneFilter({filter: filter, item: props.arr[0]}));

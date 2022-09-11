@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
     },
     requestPressable: {
-      width: 180,
+      width: '40%',
       backgroundColor: Theme.highLightColor,
       elevation: 10,
       borderRadius: 5,

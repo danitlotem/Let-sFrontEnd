@@ -1,15 +1,13 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-unused-vars */
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, Image, Pressable} from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
-import {
-  updateMainPictuer,
-  clearSignUpConfig,
-} from '../../store/Slices/configurationSlice';
+import {updateMainPictuer} from '../../store/Slices/configurationSlice';
+import {setTempPictures, getMyPictures} from '../../store/Slices/picturesSlice';
 import styles from '../../Styles/SignUpStyle';
 import Theme from '../../Styles/Theme';
 import {getCurrentPath} from '../../utils/generalFunctions';
@@ -17,16 +15,24 @@ import {getCurrentPath} from '../../utils/generalFunctions';
 const SignUp4 = ({route, navigation}) => {
   const {page} = route.params;
   const path = getCurrentPath();
-  const [image1, setImage1] = useState({});
-  const [image2, setImage2] = useState({});
-  const [image3, setImage3] = useState({});
+  const myPictures = useSelector(state => state.pictures.myPictures);
+  const tempPictures = useSelector(state => state.pictures.tempPictures);
   const conf = useSelector(state => state.configuration.userConfig);
   const dispatch = useDispatch();
   const verifyToken = useSelector(state => state.configuration.token);
 
   useEffect(() => {
-    dispatch(clearSignUpConfig()); // NOTICE
-  });
+    // dispatch(clearSignUpConfig()); // NOTICE
+    if (myPictures[0] !== undefined) {
+      dispatch(setTempPictures({key: 0, value: myPictures[0].image}));
+    }
+    if (myPictures[1] !== undefined) {
+      dispatch(setTempPictures({key: 1, value: myPictures[1].image}));
+    }
+    if (myPictures[2] !== undefined) {
+      dispatch(setTempPictures({key: 2, value: myPictures[2].image}));
+    }
+  }, [dispatch, myPictures]);
 
   const pickImage = num => {
     launchImageLibrary(
@@ -40,9 +46,18 @@ const SignUp4 = ({route, navigation}) => {
           console.log('User tapped custom button: ', response.customButton);
           console.error(response.customButton);
         } else {
-          if (num === 1) setImage1({...response.assets[0]});
-          if (num === 2) setImage2({...response.assets[0]});
-          if (num === 3) setImage3({...response.assets[0]});
+          if (num === 1)
+            dispatch(
+              setTempPictures({key: 0, value: response.assets[0].base64}),
+            );
+          if (num === 2)
+            dispatch(
+              setTempPictures({key: 1, value: response.assets[0].base64}),
+            );
+          if (num === 3)
+            dispatch(
+              setTempPictures({key: 2, value: response.assets[0].base64}),
+            );
         }
       },
     );
@@ -50,11 +65,12 @@ const SignUp4 = ({route, navigation}) => {
 
   const uploadImage = async () => {
     try {
-      if (image1 !== {}) {
-        await axios.post(
+      let res;
+      if (tempPictures[0] !== undefined) {
+        res = await axios.post(
           `${path}/userPictures/${conf.user_id}`,
           {
-            base64image: image1.base64,
+            base64image: tempPictures[0].image,
             main_image: '1',
           },
           {
@@ -64,17 +80,11 @@ const SignUp4 = ({route, navigation}) => {
           },
         );
       }
-      dispatch(
-        updateMainPictuer({
-          image: image1.base64,
-        }),
-      );
-      if (image2 !== {}) {
-        //FIX ME - maybe image1 is not main image
+      if (tempPictures[1] !== undefined) {
         await axios.post(
           `${path}/userPictures/${conf.user_id}`,
           {
-            base64image: image2.base64,
+            base64image: tempPictures[1].image,
             main_image: '0',
           },
           {
@@ -84,11 +94,11 @@ const SignUp4 = ({route, navigation}) => {
           },
         );
       }
-      if (image3 !== {}) {
+      if (tempPictures[2] !== undefined) {
         await axios.post(
           `${path}/userPictures/${conf.user_id}`,
           {
-            base64image: image3.base64,
+            base64image: tempPictures[2].image,
             main_image: '0',
           },
           {
@@ -98,6 +108,7 @@ const SignUp4 = ({route, navigation}) => {
           },
         );
       }
+      dispatch(getMyPictures({myPictures: tempPictures}));
     } catch (error) {
       console.error(error);
     }
@@ -112,44 +123,72 @@ const SignUp4 = ({route, navigation}) => {
           <Text style={styles.subText}>upload only JPEG/ JPG/ PNG</Text>
         </View>
         <View style={styles.addPicSection}>
-          <Pressable onPress={() => pickImage(1)}>
-            <Image
-              source={
-                image1 !== {}
-                  ? {
-                      uri: image1.uri,
-                    }
-                  : require('../../assets/Images/Camera.png')
-              }
-              style={styles.mainPic}
-            />
-          </Pressable>
-
-          <Pressable onPress={() => pickImage(2)}>
-            <Image
-              source={
-                image2 !== {}
-                  ? {
-                      uri: image2.uri,
-                    }
-                  : require('../../assets/Images/Camera.png')
-              }
-              style={styles.picView}
-            />
-          </Pressable>
-
-          <Pressable onPress={() => pickImage(3)}>
-            <Image
-              source={
-                image3 !== {}
-                  ? {
-                      uri: image3.uri,
-                    }
-                  : require('../../assets/Images/Camera.png')
-              }
-              style={styles.picView}
-            />
-          </Pressable>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignSelf: 'flex-start',
+              marginLeft: 107,
+            }}>
+            <Pressable style={{justifyContent: 'center', marginRight: 20}}>
+              <Text>X</Text>
+            </Pressable>
+            <Pressable
+              style={{justifyContent: 'center'}}
+              onPress={() => pickImage(1)}>
+              <Image
+                source={
+                  tempPictures[0] !== undefined
+                    ? {uri: `data:image/gif;base64,${tempPictures[0].image}`}
+                    : require('../../assets/Images/Camera.png')
+                }
+                style={styles.mainPic}
+              />
+            </Pressable>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignSelf: 'flex-start',
+              marginLeft: 115,
+            }}>
+            <Pressable style={{justifyContent: 'center', marginRight: 20}}>
+              <Text>X</Text>
+            </Pressable>
+            <Pressable
+              style={{justifyContent: 'center'}}
+              onPress={() => pickImage(2)}>
+              <Image
+                source={
+                  tempPictures[1] !== undefined
+                    ? {uri: `data:image/gif;base64,${tempPictures[1].image}`}
+                    : require('../../assets/Images/Camera.png')
+                }
+                style={styles.picView}
+              />
+            </Pressable>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignSelf: 'flex-start',
+              marginLeft: 115,
+            }}>
+            <Pressable style={{justifyContent: 'center', marginRight: 20}}>
+              <Text>X</Text>
+            </Pressable>
+            <Pressable
+              style={{justifyContent: 'center'}}
+              onPress={() => pickImage(3)}>
+              <Image
+                source={
+                  tempPictures[2] !== undefined
+                    ? {uri: `data:image/gif;base64,${tempPictures[2].image}`}
+                    : require('../../assets/Images/Camera.png')
+                }
+                style={styles.picView}
+              />
+            </Pressable>
+          </View>
           <View>
             <Pressable
               style={{
@@ -181,8 +220,8 @@ const SignUp4 = ({route, navigation}) => {
               }}
               onPress={() => {
                 page === 'SignUp3'
-                  ? navigation.navigate('Log In Stack')
-                  : navigation.navigate('MyProfile');
+                  ? navigation.navigate('Log In stack')
+                  : navigation.navigate('My Profile');
               }}>
               <Text
                 style={{
