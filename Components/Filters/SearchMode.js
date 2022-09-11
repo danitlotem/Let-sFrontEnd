@@ -21,7 +21,14 @@ const searchModeItems = props => {
   const items = modes.map((item, index) => {
     return (
       <Pressable
-        style={styles.itemsInModal}
+        style={{
+          color: '#1B8AA0',
+          backgroundColor: '#ffff',
+          elevation: 5,
+          margin: 10,
+          fontSize: 22,
+          alignSelf: 'center',
+        }}
         key={index}
         onPress={() => {
           dispatch(updateOneFilter({filter: props.filter, item: item}));
@@ -37,7 +44,7 @@ const searchModeItems = props => {
       <Modal transparent={true} visible={visible}>
         <View style={styles.Modal.Item}>
           <View style={styles.Modal.searchModeList}>{items}</View>
-          <View style={{marginTop: 70}}>
+          <View style={{marginTop: 50}}>
             <Button title={'close'} onPress={hideModal} />
           </View>
         </View>

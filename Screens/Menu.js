@@ -19,6 +19,10 @@ const CustomSidebarMenu = props => {
   const fullName = useSelector(state => state.configuration.fullName);
   const email = useSelector(state => state.configuration.email);
   const userConfig = useSelector(state => state.configuration.userConfig);
+
+  const myProfilePicture = useSelector(
+    state => state.pictures.myPictures[0]?.image,
+  );
   const myStatus = useSelector(state => state.general?.myStatus);
   const mySearchMode = useSelector(
     state => state.configuration.filters?.search_mode_filter,
@@ -54,7 +58,13 @@ const CustomSidebarMenu = props => {
                   borderRadius: 55,
                   alignSelf: 'center',
                 }}
-                source={{uri: `data:image/gif;base64,${userConfig.image}`}}
+                source={{
+                  uri: `data:image/gif;base64,${
+                    myProfilePicture !== undefined
+                      ? myProfilePicture
+                      : userConfig.image
+                  }`,
+                }}
               />
             </Pressable>
             <Text style={styles.fullNameText}>{fullName}</Text>

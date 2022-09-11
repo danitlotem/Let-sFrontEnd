@@ -13,6 +13,7 @@ import axios from 'axios';
 import {updateNearbyPeople} from '../store/Slices/peopleSlice';
 import StatusModal from '../Components/StatusModal';
 import {getCurrentPath} from '../utils/generalFunctions';
+import {applyPressed} from '../store/Slices/peopleSlice';
 
 const NearbyPeople = ({navigation}) => {
   const path = getCurrentPath();
@@ -23,7 +24,7 @@ const NearbyPeople = ({navigation}) => {
   const filters = useSelector(state => state.configuration.filters);
   const nearbyPeople = useSelector(state => state.people.nearbyPeople);
   const refresh = useSelector(state => state.general.refresh);
-
+  const isApplyPressed = useSelector(state => state.people.applyPressed);
   const dispatch = useDispatch();
   const showFilters = () => {
     navigation.openDrawer();
@@ -31,7 +32,6 @@ const NearbyPeople = ({navigation}) => {
   const verifyToken = useSelector(state => state.configuration.token);
   const onApplyHandler = useCallback(async () => {
     try {
-      console.log('!');
       const people = await axios.post(
         `${path}/filters/${user_id}/${
           filters.online_filter === true ? '1' : '0'
@@ -44,11 +44,12 @@ const NearbyPeople = ({navigation}) => {
         },
       );
       dispatch(updateNearbyPeople({nearbyPeople: people.data}));
+      dispatch(applyPressed({pressed: false}));
     } catch (err) {
       console.error(err);
       console.log(err);
     }
-  }, [user_id, filters, refresh]);
+  }, [isApplyPressed]);
 
   useEffect(() => {
     onApplyHandler();

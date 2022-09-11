@@ -7,6 +7,7 @@ const initialState = {
   usersBySearchModes: {},
   receivedRequests: [],
   sendRequests: [],
+  applyPressed: false,
 };
 
 export const peopleSlice = createSlice({
@@ -31,6 +32,9 @@ export const peopleSlice = createSlice({
     searchFriend: (state, action) => {
       state.friendToSearch = action.payload.friendToSearch;
     },
+    applyPressed: (state, action) => {
+      state.applyPressed = action.payload.pressed;
+    },
     clearPeopleSlice: state => initialState,
   },
 });
@@ -42,6 +46,7 @@ export const {
   updateSendRequests,
   updateUsersBySearchModes,
   updateReceivedRequests,
+  applyPressed,
   clearPeopleSlice,
 } = peopleSlice.actions;
 

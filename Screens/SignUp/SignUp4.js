@@ -1,13 +1,17 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-unused-vars */
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, Image, Pressable} from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
-import {updateMainPictuer} from '../../store/Slices/configurationSlice';
-import {setTempPictures, getMyPictures} from '../../store/Slices/picturesSlice';
+import {
+  setTempPictures,
+  uploadImages,
+  uploadMainImage,
+  clearMyPictures,
+} from '../../store/Slices/picturesSlice';
 import styles from '../../Styles/SignUpStyle';
 import Theme from '../../Styles/Theme';
 import {getCurrentPath} from '../../utils/generalFunctions';
@@ -15,24 +19,28 @@ import {getCurrentPath} from '../../utils/generalFunctions';
 const SignUp4 = ({route, navigation}) => {
   const {page} = route.params;
   const path = getCurrentPath();
+  const [isMain, setIsMain] = useState(false);
   const myPictures = useSelector(state => state.pictures.myPictures);
   const tempPictures = useSelector(state => state.pictures.tempPictures);
   const conf = useSelector(state => state.configuration.userConfig);
-  const dispatch = useDispatch();
   const verifyToken = useSelector(state => state.configuration.token);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    // dispatch(clearSignUpConfig()); // NOTICE
-    if (myPictures[0] !== undefined) {
+    if (!myPictures[0]?.isGen) {
+      //if the first image is not generic
+      setIsMain(true);
       dispatch(setTempPictures({key: 0, value: myPictures[0].image}));
+    } else {
+      //if the first image is generic
+      dispatch(clearMyPictures());
+      setIsMain(false);
     }
-    if (myPictures[1] !== undefined) {
-      dispatch(setTempPictures({key: 1, value: myPictures[1].image}));
-    }
-    if (myPictures[2] !== undefined) {
-      dispatch(setTempPictures({key: 2, value: myPictures[2].image}));
-    }
-  }, [dispatch, myPictures]);
+    if (myPictures[1] !== undefined)
+      dispatch(setTempPictures({key: 1, value: myPictures[1]?.image}));
+    if (myPictures[2] !== undefined)
+      dispatch(setTempPictures({key: 2, value: myPictures[2]?.image}));
+  }, []);
 
   const pickImage = num => {
     launchImageLibrary(
@@ -46,14 +54,16 @@ const SignUp4 = ({route, navigation}) => {
           console.log('User tapped custom button: ', response.customButton);
           console.error(response.customButton);
         } else {
-          if (num === 1)
+          if (num === 1 && !isMain)
             dispatch(
               setTempPictures({key: 0, value: response.assets[0].base64}),
             );
-          if (num === 2)
+          if (num === 2) {
+            console.log('IN 2');
             dispatch(
               setTempPictures({key: 1, value: response.assets[0].base64}),
             );
+          }
           if (num === 3)
             dispatch(
               setTempPictures({key: 2, value: response.assets[0].base64}),
@@ -65,9 +75,8 @@ const SignUp4 = ({route, navigation}) => {
 
   const uploadImage = async () => {
     try {
-      let res;
-      if (tempPictures[0] !== undefined) {
-        res = await axios.post(
+      if (tempPictures[0] !== undefined && !myPictures[0]) {
+        await axios.post(
           `${path}/userPictures/${conf.user_id}`,
           {
             base64image: tempPictures[0].image,
@@ -79,6 +88,7 @@ const SignUp4 = ({route, navigation}) => {
             },
           },
         );
+        dispatch(uploadMainImage({myMain: tempPictures[0]}));
       }
       if (tempPictures[1] !== undefined) {
         await axios.post(
@@ -108,11 +118,15 @@ const SignUp4 = ({route, navigation}) => {
           },
         );
       }
-      dispatch(getMyPictures({myPictures: tempPictures}));
+      dispatch(uploadImages({myPictures: tempPictures}));
+      page === 'SignUp3'
+        ? navigation.navigate('Log In stack')
+        : navigation.navigate('My Profile');
     } catch (error) {
       console.error(error);
     }
   };
+
   return (
     <View style={styles.modalContainer}>
       <View>
@@ -126,13 +140,10 @@ const SignUp4 = ({route, navigation}) => {
           <View
             style={{
               flexDirection: 'row',
-              alignSelf: 'flex-start',
-              marginLeft: 107,
+              alignSelf: 'center',
             }}>
-            <Pressable style={{justifyContent: 'center', marginRight: 20}}>
-              <Text>X</Text>
-            </Pressable>
             <Pressable
+              disabled={isMain}
               style={{justifyContent: 'center'}}
               onPress={() => pickImage(1)}>
               <Image
@@ -148,12 +159,8 @@ const SignUp4 = ({route, navigation}) => {
           <View
             style={{
               flexDirection: 'row',
-              alignSelf: 'flex-start',
-              marginLeft: 115,
+              alignSelf: 'center',
             }}>
-            <Pressable style={{justifyContent: 'center', marginRight: 20}}>
-              <Text>X</Text>
-            </Pressable>
             <Pressable
               style={{justifyContent: 'center'}}
               onPress={() => pickImage(2)}>
@@ -170,12 +177,8 @@ const SignUp4 = ({route, navigation}) => {
           <View
             style={{
               flexDirection: 'row',
-              alignSelf: 'flex-start',
-              marginLeft: 115,
+              alignSelf: 'center',
             }}>
-            <Pressable style={{justifyContent: 'center', marginRight: 20}}>
-              <Text>X</Text>
-            </Pressable>
             <Pressable
               style={{justifyContent: 'center'}}
               onPress={() => pickImage(3)}>

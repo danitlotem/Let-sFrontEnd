@@ -24,7 +24,7 @@ import Theme from '../Styles/Theme';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {getCurrentPath} from '../utils/generalFunctions';
 // import {setMyImages} from '../store/Slices/generalSlice';
-import {getMyPictures} from '../store/Slices/picturesSlice';
+import {setAllMyPictures} from '../store/Slices/picturesSlice';
 
 const MyProfile = props => {
   const path = getCurrentPath();
@@ -35,6 +35,9 @@ const MyProfile = props => {
   let tempConfig = userConfig;
   const rawText = useSelector(
     state => state.general.rawText?.registration_form,
+  );
+  const myProfilePicture = useSelector(
+    state => state.pictures.myPictures[0]?.image,
   );
   const myhobbies = useSelector(state => state.configuration.myHobbies);
   let birthday = userConfig.date_of_birth;
@@ -48,11 +51,11 @@ const MyProfile = props => {
   var day = parseInt(birthday[2].slice(0, 2));
   year = year.toString();
   const [date, setDate] = useState(new Date(year, month, day));
-
+  console.log(photos);
   const getPhotos = async () => {
     try {
       const res = await axios.get(`${path}/userPictures/${userConfig.user_id}`);
-      dispatch(getMyPictures({myPictures: [...res.data]}));
+      dispatch(setAllMyPictures({myPictures: [...res.data]}));
     } catch (error) {
       console.error(error);
     }
@@ -83,18 +86,30 @@ const MyProfile = props => {
       <ScrollView>
         <View style={styles.View.photosContainer}>
           <ScrollView style={{flex: 1, marginLeft: 30}} horizontal={true}>
-            {photos.map((item, index) => {
+            {photos?.map((item, index) => {
               return (
                 <View style={{margin: 3}} key={index}>
                   <Pressable>
                     <Image
                       style={styles.Image.myPic}
-                      source={{uri: `data:image/gif;base64,${item.image}`}}
+                      source={{uri: `data:image/gif;base64,${item?.image}`}}
                     />
                   </Pressable>
                 </View>
               );
             })}
+            {photos === [] && (
+              <Image
+                style={styles.Image.myPic}
+                source={{
+                  uri: `data:image/gif;base64,${
+                    myProfilePicture !== undefined
+                      ? myProfilePicture
+                      : userConfig.image
+                  }`,
+                }}
+              />
+            )}
           </ScrollView>
           <View style={{marginRight: 30}}>
             <Pressable

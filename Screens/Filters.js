@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 // eslint-disable-next-line no-unused-vars
 import React from 'react';
-import {View, SafeAreaView, Text} from 'react-native';
+import {View, SafeAreaView, Text, Pressable} from 'react-native';
 import {DrawerItemList, createDrawerNavigator} from '@react-navigation/drawer';
 import NearbyPeople from '../Screens/NearbyPeople';
 import AgeItem from '../Components/Filters/AgeItem';
@@ -14,13 +14,12 @@ import {Switch} from 'react-native-paper';
 import {useDispatch, useSelector} from 'react-redux';
 import Theme from '../Styles/Theme';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import {
   updateFilters,
   updateOneFilter,
   clearFilters,
 } from '../store/Slices/configurationSlice';
-
+import {applyPressed} from '../store/Slices/peopleSlice';
 const FiltersBarDrawer = createDrawerNavigator();
 
 const CustomFiltersBar = props => {
@@ -69,6 +68,7 @@ const CustomFiltersBar = props => {
 
   const onApply = () => {
     dispatch(updateFilters({filters: filters}));
+    dispatch(applyPressed({pressed: true}));
     props.navigation.closeDrawer();
   };
   const onClear = () => {
