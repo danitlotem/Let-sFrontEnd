@@ -15,13 +15,13 @@ import {Divider} from 'react-native-paper';
 import {useSelector, useDispatch} from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Theme from '../../Styles/Theme';
-
 import signUpHobbies from '../../Styles/SignUpHobbies';
 import FiltersHobbies from '../../Styles/FiltersHobbies';
 import {updateHobbies} from '../../store/Slices/configurationSlice';
+
 const Hobbies = props => {
-  const listOfHobbies = useSelector(state => state.general.rawText.Hobbies);
-  const myHobbies = useSelector(state => state.configuration.myHobbies);
+  const listOfHobbies = useSelector(state => state.general.rawText?.Hobbies);
+  const myHobbies = useSelector(state => state.configuration?.myHobbies);
   const [visible, setVisible] = useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
@@ -37,11 +37,20 @@ const Hobbies = props => {
   };
 
   const addToList = val => {
-    dispatch(
-      updateHobbies({
-        myHobbies: [...myHobbies, val],
-      }),
-    );
+    if (myHobbies.includes(val) === true) {
+      const temp = myHobbies.filter(hobbie => hobbie !== val);
+      dispatch(
+        updateHobbies({
+          myHobbies: [...temp],
+        }),
+      );
+    } else {
+      dispatch(
+        updateHobbies({
+          myHobbies: [...myHobbies, val],
+        }),
+      );
+    }
   };
   const clearHobbies = () => {
     dispatch(
@@ -53,6 +62,7 @@ const Hobbies = props => {
 
   return (
     <View style={hobbiesStyle.viewStyle}>
+      {/*Modal */}
       <Modal transparent={true} visible={visible}>
         <View style={hobbiesStyle.Item}>
           <View style={{top: 20, alignSelf: 'center', position: 'absolute'}}>
@@ -75,7 +85,6 @@ const Hobbies = props => {
                   {element.lst.map((item, index) => {
                     return (
                       <TouchableOpacity
-                        //FIX ME reRender on press
                         style={hobbiesListItemStyle(item)}
                         key={index}
                         onPress={() => addToList(item)}>
@@ -96,14 +105,14 @@ const Hobbies = props => {
         </View>
       </Modal>
 
-      {/* filter item */}
+      {/* Item in filters menu */}
       <View style={{flexDirection: 'row'}}>
         <View>
           <Pressable style={hobbiesStyle.itemPressable} onPress={showModal}>
             <Text style={hobbiesStyle.valueItemText}>{props.text}</Text>
           </Pressable>
         </View>
-        <View style={{justifyContent: 'center'}}>
+        <View style={{justifyContent: 'flex-start'}}>
           <Pressable onPress={() => clearHobbies()}>
             <Ionicons
               color={Theme.backgroundColor}

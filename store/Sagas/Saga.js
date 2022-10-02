@@ -1,9 +1,10 @@
 /* eslint-disable require-yield */
-import {put, all, call, take, fork} from 'redux-saga/effects';
+import {put, call, take, fork} from 'redux-saga/effects';
 import axios from 'axios';
 import {getRawText} from '../Slices/generalSlice';
 import {getCurrentLocationSaga} from '../../utils/location';
 import {watchSocket} from '../../utils/socket';
+import {getCurrentPath} from '../../utils/generalFunctions';
 import {changeStatus} from '../Slices/generalSlice';
 
 export function* helloApp() {
@@ -11,27 +12,30 @@ export function* helloApp() {
 }
 
 const getData = async () => {
-  return await axios.get(`http://192.168.1.101:3000/dataFromSetsToClient`);
+  const path = getCurrentPath();
+  return await axios.get(`${path}/dataFromSetsToClient`);
 };
 
 export function* getConstants() {
   try {
     const response = yield call(getData);
     yield put(getRawText({rawText: response.data}));
-    console.log('CONSTANTS ACCEPTED');
+    yield put(changeStatus({status: 'accepted'}));
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 }
 
 export function* rootSaga() {
   console.log('---------------START---------------');
-  yield all([helloApp(), getConstants()]);
-  console.log('-----------------');
-  // while (true) {
-  yield take(changeStatus.type);
+  yield call(helloApp);
 
-  yield fork(getCurrentLocationSaga);
-  yield fork(watchSocket); // //yield take(changeStatus.type);
-  yield take(changeStatus.type);
+  while (true) {
+    yield call(getConstants);
+    console.log('---------CONSTATNTS ACCEPTED----------');
+    yield take(changeStatus.type);
+    yield fork(getCurrentLocationSaga);
+    yield fork(watchSocket);
+    yield take(changeStatus.type);
+  }
 }

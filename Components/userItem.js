@@ -11,6 +11,7 @@ import Theme from '../Styles/Theme';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import UserProfile from '../Components/UserProfile';
+import {getCurrentPath} from '../utils/generalFunctions';
 
 const UserItem = props => {
   const [visible, setVisible] = useState(false);
@@ -20,7 +21,8 @@ const UserItem = props => {
   const myConfig = useSelector(state => state.configuration.userConfig);
   const navigation = useNavigation();
   const myStatus = config.user_status;
-
+  const verifyToken = useSelector(state => state.configuration.token);
+  const path = getCurrentPath();
   const typeIcon = () => {
     if (props.type === 'notFriend')
       return (
@@ -93,11 +95,17 @@ const UserItem = props => {
   };
   const createNewChat = async () => {
     try {
-      await axios.post(
-        `http://192.168.1.101:3000/chats/${myConfig.user_id}/${config.user_id}`,
+      const res = await axios.post(
+        `${path}/chats/${myConfig.user_id}/${config.user_id}`,
+        {},
+        {
+          headers: {
+            authorization: 'bearer ' + verifyToken,
+          },
+        },
       );
-    } catch {
-      alert('in catch');
+    } catch (err) {
+      console.error(err);
     }
   };
   const onPressType = type => {
@@ -121,6 +129,7 @@ const UserItem = props => {
         setVisible={setVisible}
         {...props}
         closeModal={hideModal}
+        config={config}
       />
 
       <Pressable
@@ -143,7 +152,6 @@ const UserItem = props => {
         </View>
         <View
           style={{
-            // flexDirection: 'row',
             justifyContent: 'space-between',
             width: '82%',
           }}>
@@ -174,15 +182,17 @@ const UserItem = props => {
                 justifyContent: 'space-between',
               }}>
               <Text style={styles.friendAge}>age: {config.age}</Text>
-              <Text style={styles.friendAge}>
-                {parseInt(config.distance, 10)}m
-              </Text>
+              {config.distance !== null && (
+                <Text style={styles.friendAge}>
+                  {parseInt(config.distance, 10)}m
+                </Text>
+              )}
             </View>
             <View style={{marginTop: 5}}>
-              <Text>Search mode: {config.search_mode} </Text>
+              <Text> {config.search_mode} </Text>
             </View>
-            <View style={{marginTop: 15}}>
-              <Text>my Status: {myStatus} </Text>
+            <View style={{marginTop: 5}}>
+              <Text> {myStatus} </Text>
             </View>
             <View style={{marginTop: 20, alignSelf: 'center'}}>
               <Pressable

@@ -2,7 +2,16 @@ import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
   userConfig: {},
-  signUpConfig: {},
+  signUpConfig: {
+    email: '',
+    password: '',
+    first_name: '',
+    last_name: '',
+    date_of_birth: '',
+    city: '',
+    phone_number: '',
+    profession: '',
+  },
   email: '',
   fullName: '',
   token: '',
@@ -14,9 +23,9 @@ const initialState = {
     relationship_filter: 'Relationship',
     interested_in_filter: 'Interested in',
     age_filter: [],
-    friends_only_filter: 0,
+    friends_only_filter: false,
+    online_filter: false,
     radius_filter: 500,
-    online_filter: true,
   },
 };
 
@@ -24,6 +33,12 @@ export const configurationSlice = createSlice({
   name: 'configer',
   initialState,
   reducers: {
+    updateUserId: (state, action) => {
+      state.userConfig.user_id = {
+        ...state.userConfig,
+        user_id: action.payload.user_id,
+      };
+    },
     updateDetails: (state, action) => {
       state.userConfig = action.payload.userConfig;
       state.email = action.payload.email;
@@ -47,9 +62,19 @@ export const configurationSlice = createSlice({
     updateFilters: (state, action) => {
       state.filters = {...action.payload.filters};
     },
+    updateOneFilter: (state, action) => {
+      const filter = action.payload.filter;
+      const item = action.payload.item;
+      state.filters[filter] = item;
+    },
+    updateOneSignUpConfig: (state, action) => {
+      const key = action.payload.key;
+      const value = action.payload.value;
+      state.signUpConfig[key] = value;
+    },
+
     clearFilters: state => {
       state.filters = {...initialState.filters};
-      console.log('changed');
     },
     clearHobbies: state => {
       state.myHobbies = [];
@@ -57,19 +82,24 @@ export const configurationSlice = createSlice({
     clearSignUpConfig: state => {
       state.signUpConfig = {};
     },
+    clearConfigurationSlice: state => initialState,
   },
 });
 
 export const {
+  updateUserId,
   updateDetails,
+  updateOneFilter,
   updateMainPictuer,
   updateSearchMode,
-  clearSignUpConfig,
   updateConfiguration,
   updateHobbies,
   updateFilters,
+  updateOneSignUpConfig,
+  clearSignUpConfig,
   clearFilters,
   clearHobbies,
+  clearConfigurationSlice,
 } = configurationSlice.actions;
 
 export default configurationSlice.reducer;

@@ -10,10 +10,9 @@ const styles = StyleSheet.create({
   View: {
     headerBlock: {
       alignItems: 'center',
-      top: 20,
     },
     filtersMenu: {
-      top: 30,
+      top: 15,
       alignSelf: 'center',
       width: '90%',
       height: '80%',
@@ -44,6 +43,11 @@ const styles = StyleSheet.create({
       fontSize: 18,
       fontFamily: Theme.fontFamilyBold,
     },
+    itemText: {
+      fontFamily: Theme.fontFamilyRegular,
+      color: '#000000',
+      fontSize: 16,
+    },
     friendsOnlyText: {
       alignSelf: 'center',
       justifyContent: 'center',
@@ -65,6 +69,11 @@ const styles = StyleSheet.create({
       left: 35,
       fontFamily: Theme.fontFamilyRegular,
     },
+    closeModal: {
+      top: 50,
+      width: 250,
+      alignSelf: 'center',
+    },
   },
   Icon: {
     searchIcon: {
@@ -80,8 +89,6 @@ const styles = StyleSheet.create({
   Pressable: {
     searchPressable: {
       backgroundColor: Theme.secondColor,
-      // borderWidth: 1,
-      // borderColor: Theme.backgroundColor,
       justifyContent: 'center',
       alignSelf: 'center',
       width: 150,
@@ -99,6 +106,17 @@ const styles = StyleSheet.create({
       height: 40,
       flexDirection: 'row',
     },
+    itemsInModal: {
+      marginTop: 20,
+    },
+    modsPressables: {
+      color: '#1B8AA0',
+      backgroundColor: '#ffff',
+      elevation: 5,
+      margin: 10,
+      fontSize: 22,
+      alignSelf: 'center',
+    }
   },
   FilterItem: {
     viewStyle: {
@@ -107,7 +125,7 @@ const styles = StyleSheet.create({
       margin: 5,
       alignSelf: 'center',
       borderRadius: 5,
-      width: '75%',
+      width: '70%',
       borderWidth: 1,
       borderColor: Theme.highLightColor,
       elevation: 5,
@@ -118,7 +136,7 @@ const styles = StyleSheet.create({
     },
     itemPressable: {
       justifyContent: 'center',
-      width: 160,
+      width: 150,
     },
     valueItemText: {
       fontSize: 16,

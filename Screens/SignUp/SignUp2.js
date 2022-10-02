@@ -1,22 +1,22 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React, {useState} from 'react';
-import {View, Text, ScrollView, Button} from 'react-native';
+import {View, Text, Button} from 'react-native';
 import {Chip} from 'react-native-paper';
 import styles from '../../Styles/SignUpStyle';
 import Theme from '../../Styles/Theme';
 import {useSelector, useDispatch} from 'react-redux';
 import {updateConfiguration} from '../../store/Slices/configurationSlice';
 
+//NOTICE: When the application loads, an API call is made to receive the constants of the form. The constants are saved under rawText object
+
 function SignUp2({navigation}) {
   const rawText = useSelector(state => state.general.rawText.registration_form);
-
   const [gender, setGender] = useState('');
   const [sexualOrientation, setSexualOrientation] = useState('');
   const [relationshipStatus, setRelationshipStatus] = useState(0);
   const [pronoun, setPronoun] = useState(0);
   const dispatch = useDispatch();
-  const signUpConfig = useSelector(state => state.configuration.signUpConfig);
 
   const chipStyle = (value, chip) => {
     return {
@@ -76,7 +76,7 @@ function SignUp2({navigation}) {
         </View>
       </View>
       <View style={styles.catagory}>
-        <Text style={styles.catagoryText}>I prefer to be called</Text>
+        <Text style={styles.catagoryText}>My sexual orientation</Text>
         <View style={styles.chipBlock}>
           {rawText.sexual_orientation.map((item, index) => {
             return (

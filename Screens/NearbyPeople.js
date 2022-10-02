@@ -1,9 +1,8 @@
-/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-alert */
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/prop-types */
 // eslint-disable-next-line no-unused-vars
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {View, Text, ScrollView, Pressable} from 'react-native';
 import UserItem from '../Components/userItem';
 import UpperBar from '../Components/UpperBar';
@@ -23,40 +22,72 @@ const NearbyPeople = ({navigation}) => {
   const user_id = userConfig.user_id;
   const filters = useSelector(state => state.configuration.filters);
   const nearbyPeople = useSelector(state => state.people.nearbyPeople);
+  const refresh = useSelector(state => state.general.refresh);
+  const isApplyPressed = useSelector(state => state.people.applyPressed);
   const dispatch = useDispatch();
   const showFilters = () => {
     navigation.openDrawer();
   };
-
-  const onApplyHandler = async () => {
+  const verifyToken = useSelector(state => state.configuration.token);
+  const onApplyHandler = useCallback(async () => {
     try {
       const people = await axios.post(
         `${path}/filters/${user_id}/${
           filters.online_filter === true ? '1' : '0'
         }`,
         filters,
+        {
+          headers: {
+            Authorization: 'Bearer ' + verifyToken,
+          },
+        },
       );
       dispatch(updateNearbyPeople({nearbyPeople: people.data}));
     } catch (err) {
-      alert(err);
+      console.error(err);
     }
-  };
+  });
 
   useEffect(() => {
     onApplyHandler();
+  }, [user_id, isApplyPressed, refresh]);
+
+  useEffect(() => {
     setVisible(true);
-  }, [user_id, filters, dispatch]);
+  }, [isApplyPressed]);
 
   const onFriendRequest = async userNum => {
     try {
-      await axios.post(`${path}/friendRequest/send/${user_id}/${userNum}`);
+      await axios.post(
+        `${path}/friendRequest/send/${user_id}/${userNum}`,
+        {},
+        {
+          headers: {
+            Authorization: 'Bearer ' + verifyToken,
+          },
+        },
+      );
       onApplyHandler(); //FIX ME?
     } catch (error) {
-      alert(error);
+      console.error(error);
     }
   };
-
-  const mappingUsers = (item, index) => {
+  const onAccept = async userNum => {
+    try {
+      await axios.post(
+        `${path}/friendRequest/approve/${user_id}/${userNum}`,
+        {},
+        {
+          headers: {
+            authorization: 'bearer ' + verifyToken,
+          },
+        },
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const mappingUsers = nearbyPeople.map((item, index) => {
     if (item.mutualConnections === 1) {
       return (
         <UserItem
@@ -82,6 +113,7 @@ const NearbyPeople = ({navigation}) => {
           config={item}
           name={`${item.first_name} ${item.last_name}`}
           type={'requestsUserRecieved'}
+          function={onAccept}
         />
       );
     } else if (item.notConnected === 1) {
@@ -95,17 +127,17 @@ const NearbyPeople = ({navigation}) => {
         />
       );
     }
-  };
+  });
 
   return (
     <View style={styles.View.container}>
       <UpperBar title={'Nearby people'} />
-      <StatusModal
-        visible={visible}
-        setVisible={setVisible}
-        closeModal={hideModal}
-      />
       <View style={styles.View.openFiltersContainer}>
+        <StatusModal
+          visible={visible}
+          setVisible={setVisible}
+          closeModal={hideModal}
+        />
         <Pressable
           style={styles.Pressable.filtersStyle}
           onPress={showFilters}
@@ -117,7 +149,7 @@ const NearbyPeople = ({navigation}) => {
 
       <View>
         <ScrollView style={styles.ScrollView.scroll}>
-          {nearbyPeople.map((item, index) => mappingUsers(item, index))}
+          {mappingUsers}
           {Object.keys(nearbyPeople).length === 0 && (
             <Text style={{color: 'white'}}>No people</Text>
           )}

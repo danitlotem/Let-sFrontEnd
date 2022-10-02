@@ -1,10 +1,9 @@
-/* eslint-disable no-prototype-builtins */
 /* eslint-disable react-native/no-inline-styles */
-/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
+/* eslint-disable no-prototype-builtins */
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-alert */
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import styles from '../Styles/ChatStyle';
 import {
   View,
@@ -13,10 +12,10 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
+  Pressable,
   Image,
 } from 'react-native';
 import {getCurrentPath} from '../utils/generalFunctions';
-
 import MessageForm from '../Components/Chat/MessageForm';
 import MyMessage from '../Components/Chat/MyMessage';
 import TheirMessage from '../Components/Chat/TheirMessage';
@@ -24,12 +23,10 @@ import axios from 'axios';
 import {useDispatch, useSelector} from 'react-redux';
 import {setCurrentChat, newMessageWaiting} from '../store/Slices/chatSlice';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import {useNavigation} from '@react-navigation/native';
 
 const Conversation = ({route}) => {
   const path = getCurrentPath();
-
   const navigation = useNavigation();
   const friendId = route.params.friendConfig.user_id;
   const friendImage = route.params.friendConfig.image;
@@ -37,11 +34,19 @@ const Conversation = ({route}) => {
   const myId = useSelector(state => state.configuration.userConfig.user_id);
   const messages = useSelector(state => state.chat.currChat);
 
+  const verifyToken = useSelector(state => state.configuration.token);
+  const messageWaiting = useSelector(state => state.chat.messageWaiting);
+
+  const scrollViewRef = useRef();
+
   const dispatch = useDispatch();
   const getMessages = async () => {
-    //FIX ME there is a problem with update list of open chats
     try {
-      const res = await axios.get(`${path}/chats/${myId}/${friendId}/0`);
+      const res = await axios.get(`${path}/chats/${myId}/${friendId}/0`, {
+        headers: {
+          Authorization: 'Bearer ' + verifyToken,
+        },
+      });
       if (res.data.hasOwnProperty('msg')) {
         dispatch(
           setCurrentChat({
@@ -56,19 +61,21 @@ const Conversation = ({route}) => {
         );
       }
     } catch (error) {
-      alert(error);
+      console.error(error);
     }
   };
 
   useEffect(() => {
     getMessages();
-  }, [messages]);
+  }, [dispatch, messageWaiting]);
+
+  //NOTICE: MessageForm,myMessage and TheirMessage are components we created. Each of the codes is located in the Components\Chat folder in the file as the component name
 
   return (
     <KeyboardAvoidingView style={styles.View.container}>
       <View style={styles.View.chatDetailsContainer}>
         <Pressable
-          style={styles.Pressable.arrowBack}
+          style={styles.Pressables.arrowBack}
           onPress={() => navigation.goBack()}>
           <Ionicons name={'arrow-back-outline'} size={30} />
         </Pressable>
@@ -84,24 +91,31 @@ const Conversation = ({route}) => {
       </View>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.View.chatFeed}>
-          <ScrollView style={{height: '80%'}}>
+          <ScrollView
+            ref={scrollViewRef}
+            onContentSizeChange={() =>
+              scrollViewRef.current.scrollToEnd({animated: true})
+            }
+            style={{height: '80%'}}>
             {messages.length > 0 ? (
-              messages.map((item, index) => (
-                <View key={index}>
-                  {myId === item.sender_user_id ? (
+              messages.map((item, index) =>
+                myId === item.sender_user_id ? (
+                  <View key={index}>
                     <MyMessage
-                      content={item?.content}
-                      time={item?.creation_date}
+                      content={item.content}
+                      time={item.creation_date}
                     />
-                  ) : (
+                  </View>
+                ) : (
+                  <View key={index}>
                     <TheirMessage
                       friendName={friendName}
-                      content={item?.content}
-                      time={item?.creation_date}
+                      content={item.content}
+                      time={item.creation_date}
                     />
-                  )}
-                </View>
-              ))
+                  </View>
+                ),
+              )
             ) : (
               <Text>This is an empty chat</Text>
             )}

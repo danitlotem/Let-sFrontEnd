@@ -1,32 +1,43 @@
-/* eslint-disable no-alert */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-prototype-builtins */
-import React, {useState, useEffect} from 'react';
-import {View, Text, Pressable, StyleSheet} from 'react-native';
-import {useSelector} from 'react-redux';
+import React, {useEffect} from 'react';
+import {View, Text, Pressable, ScrollView} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import UserItem from '../Components/userItem';
+import {updateSendRequests} from '../store/Slices/peopleSlice';
+import {getCurrentPath} from '../utils/generalFunctions';
+import {Divider} from 'react-native-paper';
+import styles from '../Styles/FriendsRequests';
 
 const PendingFriendRequests = props => {
   const userId = useSelector(state => state.configuration.userConfig.user_id);
-  const [listOfConf, setlistOfConf] = useState([]);
+  const verifyToken = useSelector(state => state.configuration.token);
+  const listOfConf = useSelector(state => state.people.sendRequests);
 
+  const path = getCurrentPath();
+  const dispatch = useDispatch();
   const getMyFriendRequest = async () => {
     try {
       const friends = await axios.get(
-        `http://192.168.1.101:3000/friendRequest/sendRequests/${userId}`,
+        `${path}/friendRequest/sendRequests/${userId}`,
+        {
+          headers: {
+            authorization: 'bearer ' + verifyToken,
+          },
+        },
       );
       if (!friends.data.hasOwnProperty('msg')) {
-        setlistOfConf([...friends.data]);
+        dispatch(updateSendRequests({sent: [...friends.data]}));
       }
     } catch (error) {
-      alert(error);
+      console.error(error);
     }
   };
   useEffect(() => {
     getMyFriendRequest();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -37,32 +48,18 @@ const PendingFriendRequests = props => {
         <Text>X</Text>
       </Pressable>
       <Text>Pending friend request</Text>
-      {/* {listOfConf.map(item => {
-        return (
-          <UserItem
-            config={item}
-            key={`${item.user_id}`}
-            type={'requestsUserSent'}
-          />
-        );
-      })} */}
+      <ScrollView style={styles.scrollContainer}>
+        {listOfConf.map((item, index) => {
+          return (
+            <View key={index}>
+              <UserItem config={item} type={'requestsUserSent'} />
+              <Divider />
+            </View>
+          );
+        })}
+      </ScrollView>
     </View>
   );
 };
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    elevation: 10,
-    backgroundColor: '#ffff',
-    height: '80%',
-    width: '90%',
-    marginTop: 80,
-    alignSelf: 'center',
-  },
-  pressable: {
-    height: 30,
-    width: 30,
-    alignSelf: 'flex-start',
-  },
-});
+
 export default PendingFriendRequests;

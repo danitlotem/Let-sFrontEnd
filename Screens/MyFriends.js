@@ -1,13 +1,12 @@
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-alert */
 // eslint-disable-next-line no-unused-vars
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   TextInput,
   Text,
-  SafeAreaView,
+  ScrollView,
   Pressable,
   Modal,
 } from 'react-native';
@@ -21,6 +20,7 @@ import MyFriendRequests from '../Components/MyFriendRequests';
 import UpperBar from '../Components/UpperBar';
 import {updateMyFriends, searchFriend} from '../store/Slices/peopleSlice';
 import {getCurrentPath} from '../utils/generalFunctions';
+
 const MyFriends = () => {
   const path = getCurrentPath();
   const [friendName, setFriendName] = useState(friendToSearch);
@@ -30,12 +30,22 @@ const MyFriends = () => {
   const listOfConf = useSelector(state => state.people.myFriends);
   const friendToSearch = useSelector(state => state.people.friendToSearch);
   const dispatch = useDispatch();
+  const verifyToken = useSelector(state => state.configuration.token);
+  const refresh = useSelector(state => state.general.refresh);
+  const myLongitude = useSelector(state => state.general?.myLongitude);
+  const myLatitude = useSelector(state => state.general?.myLatitude);
 
-  const FindFriend = async () => {
+  //Search friend by name
+  const FindFriend = useCallback(async () => {
     try {
       const valToSearch = friendToSearch === '' ? '%20' : friendToSearch;
       const friends = await axios.get(
-        `${path}:3000/friendRequest/byName/${userConfig.user_id}/1/${valToSearch}`,
+        `${path}/friendRequest/byName/${userConfig.user_id}/1/${valToSearch}`,
+        {
+          headers: {
+            Authorization: 'Bearer ' + verifyToken,
+          },
+        },
       );
       dispatch(
         updateMyFriends({
@@ -43,18 +53,25 @@ const MyFriends = () => {
         }),
       );
     } catch (error) {
-      alert(error);
+      console.error(error);
     }
-  };
+  });
 
   useEffect(() => {
     FindFriend();
-  }, [friendToSearch, visibleMyRequests, visiblePendingRequests]);
+  }, [
+    friendToSearch,
+    visibleMyRequests,
+    visiblePendingRequests,
+    refresh,
+    myLongitude,
+    myLatitude,
+  ]);
 
   return (
     <View style={styles.View.container}>
       <UpperBar />
-
+      {/*Those two modals are Showing two lists: 1) those are awaiting my approval 2) those I sent */}
       <Modal transparent={true} visible={visibleMyRequests}>
         <MyFriendRequests setVisible={setVisibleMyRequests} />
       </Modal>
@@ -103,14 +120,12 @@ const MyFriends = () => {
           </Text>
         </Pressable>
       </View>
-      <SafeAreaView style={styles.SafeAreaView.listOfConfContainer}>
+      <ScrollView style={styles.SafeAreaView.listOfConfContainer}>
         {!listOfConf.hasOwnProperty('msg') &&
-          listOfConf.map(item => {
-            return (
-              <UserItem config={item} key={`${item.user_id}`} type={'friend'} />
-            );
+          listOfConf.map((item, index) => {
+            return <UserItem config={item} key={index} type={'friend'} />;
           })}
-      </SafeAreaView>
+      </ScrollView>
     </View>
   );
 };

@@ -7,9 +7,10 @@ const styles = StyleSheet.create({
     padding: 20,
     elevation: 10,
     backgroundColor: '#ffff',
-    height: '50%',
+    height: '60%',
     width: '90%',
-    marginTop: 80,
+    marginTop: 120,
+    borderRadius: 10,
     alignSelf: 'center',
   },
   scroll: {
@@ -18,15 +19,14 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   Pic: {
-    borderColor: 'orange',
     borderWidth: 2,
     borderRadius: 40,
     height: 60,
     width: 60,
+    alignSelf: 'center',
     marginRight: 15,
   },
   addPic: {
-    //marginTop: 10,
     borderColor: '#0E6070',
     borderWidth: 1,
     borderRadius: 20,
@@ -40,8 +40,8 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#0E6070',
-    fontSize: 24,
     alignSelf: 'center',
+    fontSize: 24,
     fontFamily: Theme.fontFamilyBold,
   },
 });

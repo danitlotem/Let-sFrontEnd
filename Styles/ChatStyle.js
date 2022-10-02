@@ -3,14 +3,10 @@ import Theme from './Theme';
 
 const styles = StyleSheet.create({
   View: {
-    row: {
-      flexDirection: 'row',
+    titleContainer: {
+      marginBottom: 10,
     },
-    Details: {
-      width: 220,
-      justifyContent: 'flex-start',
-    },
-    upBarContainer: {
+    UpperBarContainer: {
       height: 50,
       position: 'absolute',
     },
@@ -18,9 +14,6 @@ const styles = StyleSheet.create({
       backgroundColor: Theme.backgroundColor,
       height: Theme.height,
       width: Theme.width,
-    },
-    chatListContainer: {
-      marginTop: 50,
     },
     container: {
       flex: 1,
@@ -44,7 +37,6 @@ const styles = StyleSheet.create({
       maxWidth: '70%',
       marginLeft: 18,
       alignSelf: 'flex-start',
-      // flexDirection: 'row',
     },
     myMessage: {
       backgroundColor: Theme.backgroundColor,
@@ -61,15 +53,21 @@ const styles = StyleSheet.create({
       marginBottom: 40,
       paddingHorizontal: 10,
     },
+    messageFormInnerContainer: {
+      marginTop: 10,
+      flexDirection: 'row',
+    },
     chatDetailsContainer: {
-      top: 10,
       left: 10,
       padding: 7,
       flexDirection: 'row',
       width: '95%',
     },
+    row: {
+      flexDirection: 'row',
+    },
   },
-  Pressable: {
+  Pressables: {
     item: {
       backgroundColor: '#FFFFFF',
       width: '90%',
@@ -87,6 +85,10 @@ const styles = StyleSheet.create({
       width: 70,
       flexDirection: 'row',
     },
+    submitButton: {
+      position: 'relative',
+      margin: 8,
+    },
     arrowBack: {
       alignSelf: 'center',
       marginRight: 10,
@@ -102,35 +104,19 @@ const styles = StyleSheet.create({
 
   Text: {
     title: {
+      alignSelf: 'center',
       fontSize: 22,
       color: Theme.secondColor,
       fontFamily: Theme.fontFamilyBold,
-      alignSelf: 'center',
     },
     body: {
       fontSize: 18,
       color: '#105A87',
       fontFamily: Theme.fontFamilyRegular,
     },
-    chatTitle: {
-      textAlign: 'center',
-      color: '#334c9e',
-      fontWeight: 'bold',
-      fontSize: 24,
-    },
-    chatSubtitle: {
-      textAlign: 'center',
-      color: '#7554a0',
-      fontSize: 12,
-    },
 
-    MessageTitle: {
-      fontFamily: Theme.fontFamilyBold,
-      color: Theme.backgroundColor,
-    },
     MessageBody: {
       fontFamily: Theme.fontFamilyRegular,
-      // color: Theme.backgroundColor,
     },
     myMessageTime: {
       color: '#FFFFFF',
@@ -151,18 +137,12 @@ const styles = StyleSheet.create({
       bottom: 0,
     },
   },
-  // messageForm: {
-  //   width: '95%',
-  //   borderRadius: 6,
-  //   position: 'absolute',
-  // },
-
-  // dateContainer: {
-  //   justifyContent: 'center',
-  //   position: 'absolute',
-  //   right: -20,
-  //   alignSelf: 'center',
-  // },
+  Icon: {
+    sentAndRecieveIcon: {
+      alignSelf: 'center',
+      marginRight: 4,
+    },
+  },
 });
 
 export default styles;

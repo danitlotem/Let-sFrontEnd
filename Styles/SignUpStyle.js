@@ -9,10 +9,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
   },
+  title: {
+    fontSize: 25,
+    alignSelf: 'center',
+    color: Theme.secondColor,
+    fontFamily: Theme.fontFamilyBold,
+    marginTop: 30,
+  },
+  fullName: {
+    width: '90%',
+    alignSelf: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 10,
+  },
   emailPassword: {
     width: Theme.width,
   },
-
   picView: {
     width: 80,
     height: 80,
@@ -29,26 +42,14 @@ const styles = StyleSheet.create({
     borderColor: Theme.highLightColor,
     marginBottom: 10,
   },
-  fullName: {
-    width: '90%',
-    alignSelf: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 10,
-  },
-  textTitle: {
-    marginTop: 15,
-    marginBottom: 10,
-    color: '#0E6070',
-  },
   textInput: {
     width: '80%',
     alignSelf: 'center',
     marginTop: 10,
   },
-  notValidField: {
+  inValidField: {
     left: 10,
-    color: 'red',
+    color: '#525252',
     justifyContent: 'space-between',
   },
   nameInput: {
@@ -56,18 +57,6 @@ const styles = StyleSheet.create({
   },
   birthday: {
     marginTop: 20,
-  },
-  Pressables: {
-    height: 30,
-    width: '80%',
-    borderRadius: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    left: 40,
-  },
-  Hobbies: {
-    marginTop: 20,
-    marginBottom: 20,
   },
   ButtonSection1: {
     width: 250,
@@ -80,67 +69,18 @@ const styles = StyleSheet.create({
     fontFamily: Theme.fontFamilyRegular,
     alignSelf: 'center',
   },
-  title: {
-    fontSize: 25,
-    alignSelf: 'center',
-    color: Theme.secondColor,
-    fontFamily: Theme.fontFamilyBold,
-    marginTop: 30,
-  },
-  pic: {
-    height: 80,
-    width: 80,
-    margin: 15,
-    borderWidth: 2,
-    borderColor: '#0E6070',
-    borderRadius: 40,
-    elevation: 10,
-  },
   addPicSection: {
     flexDirection: 'column',
     top: 20,
     alignItems: 'center',
   },
-  ButtonSection2: {
-    width: 150,
-    height: 70,
-    alignSelf: 'center',
-    justifyContent: 'space-between',
-  },
   viewStyle: {
-    backgroundColor: '#FFFFFF', // birthday,hobbies
+    backgroundColor: '#FFFFFF',
     alignSelf: 'center',
     padding: 7,
     margin: 5,
     borderRadius: 5,
     width: '80%',
-  },
-  signUpHobbies: {
-    backgroundColor: '#EBEBEB', // birthday,hobbies
-    marginLeft: 30,
-    padding: 7,
-    color: Theme.secondColor,
-    margin: 5,
-    borderRadius: 5,
-    width: '80%',
-    borderWidth: 1,
-    borderColor: 'white',
-    elevation: 5,
-  },
-  HobbiesItem: {
-    width: 280,
-    margin: 5,
-  },
-  cameraButton: {
-    width: 50,
-    height: 50,
-    borderRadius: 50,
-    borderWidth: 2,
-    borderColor: '#0E6070',
-    marginBottom: 35,
-    backgroundColor: 'transparent',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   column: {
     flexDirection: 'column',
@@ -152,9 +92,8 @@ const styles = StyleSheet.create({
   },
   invalidText: {
     left: 45,
-    color: 'red',
+    color: '#525252',
   },
-
   chipBlock: {
     marginTop: 10,
     marginLeft: 40,
@@ -171,10 +110,6 @@ const styles = StyleSheet.create({
     fontFamily: Theme.fontFamilyRegular,
     alignSelf: 'center',
   },
-  Xbutton: {
-    fontSize: 18,
-    fontFamily: Theme.fontFamilyRegular,
-  },
   modalContainer: {
     padding: 20,
     height: Theme.height,
@@ -186,8 +121,6 @@ const styles = StyleSheet.create({
     fontSize: 40,
     marginTop: -10,
   },
-
-  //SignUp3
   images: {
     alignSelf: 'center',
     borderRadius: 15,
@@ -208,6 +141,30 @@ const styles = StyleSheet.create({
     alignSelf: 'baseline',
     fontFamily: Theme.fontFamilyBold,
     fontSize: 22,
+  },
+  uploadImagePressable: {
+    backgroundColor: Theme.secondColor,
+    padding: 6,
+    width: 120,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  uploadText: {
+    alignSelf: 'center',
+    fontFamily: Theme.fontFamilyBold,
+    color: '#FFFFFF',
+  },
+  skipPressble: {
+    backgroundColor: Theme.highLightColor,
+    padding: 6,
+    width: 120,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  skipText: {
+    alignSelf: 'center',
+    fontFamily: Theme.fontFamilyBold,
+    color: '#FFFFFF',
   },
 });
 

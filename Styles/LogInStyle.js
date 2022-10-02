@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   FormItem: {
-    marginLeft: 55, //FIX ME
+    marginLeft: 55, 
     flexDirection: 'column',
   },
   FormItemText: {

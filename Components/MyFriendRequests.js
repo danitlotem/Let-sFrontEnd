@@ -1,40 +1,57 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
-/* eslint-disable no-alert */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable no-unused-vars */
-import React, {useState, useEffect} from 'react';
-import {View, Text, Pressable, StyleSheet} from 'react-native';
-import {useSelector} from 'react-redux';
+import React, {useEffect} from 'react';
+import {View, Text, Pressable} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import UserItem from '../Components/userItem';
+import {getCurrentPath} from '../utils/generalFunctions';
+import {refreshOnlineUsers} from '../store/Slices/generalSlice';
+import {updateReceivedRequests} from '../store/Slices/peopleSlice';
+import styles from '../Styles/FriendsRequests';
 
 const MyFriendRequests = props => {
-  const [listOfConf, setlistOfConf] = useState([]);
+  const listOfConf = useSelector(state => state.people.receivedRequests);
   const userConfig = useSelector(state => state.configuration.userConfig);
-  const user_id = userConfig.user_id;
+  const verifyToken = useSelector(state => state.configuration.token);
 
+  const user_id = userConfig.user_id;
+  const path = getCurrentPath();
+  const dispatch = useDispatch();
   const onAccept = async userNum => {
     try {
       await axios.post(
-        `http://192.168.1.101:3000/friendRequest/approve/${user_id}/${userNum}`,
+        `${path}/friendRequest/approve/${user_id}/${userNum}`,
+        {},
+        {
+          headers: {
+            authorization: 'bearer ' + verifyToken,
+          },
+        },
       );
-      getMyFriendRequest(); //FIX ME
+      dispatch(refreshOnlineUsers());
     } catch (error) {
-      alert(error);
+      console.error(error);
     }
   };
 
   const getMyFriendRequest = async () => {
     try {
       const friends = await axios.get(
-        `http://192.168.1.101:3000/friendRequest/receivedRequests/${user_id}`,
+        `${path}/friendRequest/receivedRequests/${user_id}`,
+        {
+          headers: {
+            authorization: 'bearer ' + verifyToken,
+          },
+        },
       );
       if (!friends.data.hasOwnProperty('msg')) {
-        setlistOfConf([...friends.data]);
+        dispatch(updateReceivedRequests({requests: [...friends.data]}));
       }
     } catch (error) {
-      alert(error);
+      console.error(error);
     }
   };
 
@@ -49,8 +66,8 @@ const MyFriendRequests = props => {
         onPress={() => props.setVisible(false)}>
         <Text>X</Text>
       </Pressable>
-      <Text>My friend request</Text>
-      {/* {listOfConf &&
+      <Text>My friend requests</Text>
+      {listOfConf &&
         listOfConf.map(item => {
           return (
             <UserItem
@@ -60,26 +77,9 @@ const MyFriendRequests = props => {
               function={onAccept}
             />
           );
-        })} */}
+        })}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    elevation: 10,
-    backgroundColor: '#ffff',
-    height: '80%',
-    width: '90%',
-    marginTop: 80,
-    alignSelf: 'center',
-  },
-  pressable: {
-    height: 30,
-    width: 30,
-    alignSelf: 'flex-start',
-  },
-});
 
 export default MyFriendRequests;

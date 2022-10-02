@@ -9,7 +9,6 @@ const styles = StyleSheet.create({
       backgroundColor: '#ffffff',
       fontSize: 16,
       fontFamily: Theme.fontFamilyRegular,
-      borderWidth: 1,
       borderRadius: 5,
     },
   },
@@ -26,7 +25,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
     },
     requestPressable: {
-      width: 180,
+      width: '40%',
       backgroundColor: Theme.highLightColor,
       elevation: 10,
       borderRadius: 5,
@@ -86,10 +85,6 @@ const styles = StyleSheet.create({
       top: 20,
     },
   },
-  // scroll: {
-  //   height: 200,
-  //   padding: 7,
-  // },
 });
 
 export default styles;

@@ -17,7 +17,7 @@ const GetFCMToken = async () => {
 
   if (!fcmtoken) {
     try {
-      let fcmtoken = await messaging().getToken();
+      fcmtoken = await messaging().getToken();
       await AsyncStorage.setItem('fcmtoken', fcmtoken);
     } catch (error) {
       console.log(error, 'error in fcmtoken');
@@ -26,14 +26,12 @@ const GetFCMToken = async () => {
 };
 
 export const NotificationListener = async () => {
-  // Assume a message-notification contains a "type" property in the data payload of the screen to open
   messaging().onNotificationOpenedApp(remoteMessage => {
     console.log(
       'Notification caused app to open from background state:',
       remoteMessage.notification,
     );
   });
-  // Check whether an initial notification is available
   messaging()
     .getInitialNotification()
     .then(remoteMessage => {

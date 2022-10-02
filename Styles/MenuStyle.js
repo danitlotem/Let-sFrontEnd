@@ -37,6 +37,20 @@ const styles = StyleSheet.create({
   },
   detailsContainer: {
     marginTop: 10,
+    justifyContent: 'center',
+  },
+  image: {
+    height: 110,
+    width: 110,
+    borderColor: Theme.secondColor,
+    borderWidth: 2,
+    borderRadius: 55,
+    alignSelf: 'center',
+  },
+  statusContainer: {
+    alignSelf: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
   },
 });
 export default styles;

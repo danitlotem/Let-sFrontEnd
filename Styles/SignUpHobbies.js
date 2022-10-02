@@ -2,7 +2,7 @@ import {StyleSheet} from 'react-native';
 import Theme from './Theme';
 const styles = StyleSheet.create({
   viewStyle: {
-    backgroundColor: '#EBEBEB', // birthday,hobbies
+    backgroundColor: '#EBEBEB',
     marginLeft: 30,
     padding: 7,
     margin: 5,
@@ -26,7 +26,6 @@ const styles = StyleSheet.create({
   },
 
   textItem: {
-    // color: item === props.value ? 'red' : '#1B8AA0',
     color: '#1B8AA0',
     backgroundColor: '#ffff',
     elevation: 5,

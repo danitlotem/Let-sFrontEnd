@@ -1,7 +1,8 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable react/prop-types */
 /* eslint-disable radix */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-alert */
 import React, {useEffect, useState} from 'react';
 import {
   View,
@@ -10,43 +11,52 @@ import {
   Image,
   ScrollView,
   Pressable,
+  TextInput,
 } from 'react-native';
 import {Chip} from 'react-native-paper';
 import Hobbies from '../Components/Filters/Hobbies';
 import TInput from '../Components/TInput';
 import styles from '../Styles/MyProfileStyle';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import UpperBar from '../Components/UpperBar';
 import Theme from '../Styles/Theme';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {getCurrentPath} from '../utils/generalFunctions';
-const MyProfile = () => {
+import {setAllMyPictures} from '../store/Slices/picturesSlice';
+
+const MyProfile = props => {
   const path = getCurrentPath();
   const [edit, setEdit] = useState(false);
-  const [photos, setPhotos] = useState([]);
-  const email = useSelector(state => state.configuration.email);
+  const photos = useSelector(state => state.pictures.myPictures);
   const userConfig = useSelector(state => state.configuration.userConfig);
-  const rawText = useSelector(state => state.general.rawText.registration_form);
+  const email = useSelector(state => state.configuration.email);
+  let tempConfig = userConfig;
+  const rawText = useSelector(
+    state => state.general.rawText?.registration_form,
+  );
+  const myProfilePicture = useSelector(
+    state => state.pictures.myPictures[0]?.image,
+  );
   const myhobbies = useSelector(state => state.configuration.myHobbies);
   let birthday = userConfig.date_of_birth;
-
+  const dispatch = useDispatch();
   birthday = birthday.split('-');
-  const [mode, setMode] = useState('date');
+  const mode = 'date';
   const [show, setShow] = useState(false);
+  const navigation = useNavigation();
   var year = birthday[0];
   var month = birthday[1];
-  var day = parseInt(birthday[2].slice(0, 2)) + 1;
+  var day = parseInt(birthday[2].slice(0, 2));
   year = year.toString();
   const [date, setDate] = useState(new Date(year, month, day));
-
   const getPhotos = async () => {
     try {
       const res = await axios.get(`${path}/userPictures/${userConfig.user_id}`);
-      setPhotos(res.data);
+      dispatch(setAllMyPictures({myPictures: [...res.data]}));
     } catch (error) {
-      alert(error);
+      console.error(error);
     }
   };
   const onChangeDate = (event, selectedDate) => {
@@ -65,7 +75,7 @@ const MyProfile = () => {
   };
   const chipTextColor = (value, chip) => {
     return {
-      color: value === chip ? Theme.backgroundColor : '#2C143E',
+      color: value === chip ? Theme.secondColor : '#2C143E',
       fontFamily: Theme.fontFamilyRegular,
     };
   };
@@ -74,51 +84,61 @@ const MyProfile = () => {
       <UpperBar />
       <ScrollView>
         <View style={styles.View.photosContainer}>
-          {photos.map((item, index) => {
-            return (
-              <View key={index}>
-                <Pressable>
-                  <Image
-                    style={styles.Image.myPic}
-                    source={{uri: `data:image/gif;base64,${item.image}`}}
-                  />
-                </Pressable>
-              </View>
-            );
-          })}
-          <View>
-            {/* FIX ME - navigate to signUp4 */}
-            <Pressable>
-              <Text>upload photos</Text>
-            </Pressable>
-
+          <ScrollView style={{flex: 1, marginLeft: 30}} horizontal={true}>
+            {photos?.map((item, index) => {
+              return (
+                <View style={{margin: 3}} key={index}>
+                  <Pressable>
+                    <Image
+                      style={styles.Image.myPic}
+                      source={{uri: `data:image/gif;base64,${item?.image}`}}
+                    />
+                  </Pressable>
+                </View>
+              );
+            })}
+            {photos === [] && (
+              <Image
+                style={styles.Image.myPic}
+                source={{
+                  uri: `data:image/gif;base64,${
+                    myProfilePicture !== undefined
+                      ? myProfilePicture
+                      : userConfig.image
+                  }`,
+                }}
+              />
+            )}
+          </ScrollView>
+          <View style={{marginRight: 30}}>
             <Pressable
-              onPress={() => {
-                if (edit === true) {
-                  //NOTICE - add api call - update conficuration
-                  setEdit(!edit);
-                }
-                setEdit(!edit);
-              }}>
-              <Text>update profile</Text>
+              style={styles.Pressable.uploadPhotos}
+              onPress={() =>
+                navigation.navigate('UploadPictures', {
+                  page: 'my Profile',
+                })
+              }>
+              <Text style={{color: '#FFFFFF'}}>upload photos</Text>
             </Pressable>
           </View>
         </View>
         <View style={styles.View.emailPassword}>
-          <View style={styles.View.column}>
-            <TInput
-              style={styles.TInput.textInput}
-              value={email}
-              title={'Email'}
-              editable={edit}
-            />
-          </View>
+          <TextInput
+            style={styles.TextInput.emailInput}
+            value={email}
+            editable={false}
+            placeholder={'Email'}
+            outlineColor={'#13869D'}
+            underlineColor="#13869D"
+            dense={true}
+            onChangeText={val => props.onChangeText(val)}
+          />
         </View>
         <View style={styles.View.fullName}>
           <View style={styles.View.column}>
             <TInput
               style={styles.TInput.nameInput}
-              value={userConfig.first_name}
+              value={tempConfig.first_name}
               title={'First Name'}
               editable={edit}
             />
@@ -126,7 +146,7 @@ const MyProfile = () => {
           <View style={styles.View.column}>
             <TInput
               style={styles.TInput.nameInput}
-              value={userConfig.last_name}
+              value={tempConfig.last_name}
               title={'Last Name'}
               editable={edit}
             />
@@ -135,18 +155,18 @@ const MyProfile = () => {
         <TInput
           style={styles.TInput.textInput}
           title={`Phone number`}
-          value={userConfig.phone_number}
+          value={tempConfig.phone_number}
           editable={edit}
         />
         <TInput
           style={styles.TInput.textInput}
           title={`City`}
-          value={userConfig.city}
+          value={tempConfig.city}
           editable={edit}
         />
         <TInput
           style={styles.TInput.textInput}
-          title={`Proffesion`}
+          title={`Profession`}
           value={userConfig.profession}
           editable={edit}
         />
@@ -157,8 +177,8 @@ const MyProfile = () => {
               return (
                 <Chip
                   key={item}
-                  style={chipStyle(userConfig.gender, item)}
-                  textStyle={chipTextColor(userConfig.gender, item)}>
+                  style={chipStyle(tempConfig.gender, item)}
+                  textStyle={chipTextColor(tempConfig.gender, item)}>
                   {item}
                 </Chip>
               );
@@ -166,15 +186,15 @@ const MyProfile = () => {
           </View>
         </View>
         <View>
-          <Text style={styles.Text.catagoryText}>I prefer to be called</Text>
+          <Text style={styles.Text.catagoryText}>My sexual orientation</Text>
           <View style={styles.View.chipsBlocks}>
             {rawText.sexual_orientation.map(item => {
               return (
                 <Chip
                   key={item}
-                  style={chipStyle(userConfig.sexual_orientation, item)}
+                  style={chipStyle(tempConfig.sexual_orientation, item)}
                   textStyle={chipTextColor(
-                    userConfig.sexual_orientation,
+                    tempConfig.sexual_orientation,
                     item,
                   )}>
                   {item}
@@ -190,8 +210,8 @@ const MyProfile = () => {
               return (
                 <Chip
                   key={item}
-                  style={chipStyle(userConfig.pronoun, item)}
-                  textStyle={chipTextColor(userConfig.pronoun, item)}>
+                  style={chipStyle(tempConfig.pronoun, item)}
+                  textStyle={chipTextColor(tempConfig.pronoun, item)}>
                   {item}
                 </Chip>
               );
@@ -204,8 +224,8 @@ const MyProfile = () => {
             return (
               <Chip
                 key={item}
-                style={chipStyle(userConfig.relationship_status, item)}
-                textStyle={chipTextColor(userConfig.relationship_status, item)}>
+                style={chipStyle(tempConfig.relationship_status, item)}
+                textStyle={chipTextColor(tempConfig.relationship_status, item)}>
                 {item}
               </Chip>
             );
@@ -223,6 +243,7 @@ const MyProfile = () => {
               <DateTimePicker
                 testID="dateTimePicker"
                 value={date}
+                disabled={true}
                 mode={mode}
                 is24Hour={true}
                 onChange={onChangeDate}

@@ -7,14 +7,17 @@ import RnVerticalSlider from 'rn-vertical-slider';
 import styles from '../../Styles/FiltersStyle';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Theme from '../../Styles/Theme';
+import {updateOneFilter} from '../../store/Slices/configurationSlice';
+import {useDispatch} from 'react-redux';
 
 const Radius = props => {
   const [visible, setVisible] = useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
-
+  const dispatch = useDispatch();
   return (
     <View style={styles.FilterItem.viewStyle}>
+      {/*Modal */}
       <Modal transparent={true} visible={visible}>
         <View style={styles.Modal.Item}>
           <Text
@@ -31,36 +34,29 @@ const Radius = props => {
               min={0}
               max={5000}
               onChange={value => {
-                props.setRadius(value); //FIX ME
-              }}
-              onComplete={value => {
-                console.log('COMPLETE', value);
+                dispatch(
+                  updateOneFilter({filter: 'radius_filter', item: value}),
+                );
               }}
               width={50}
               height={300}
               step={100}
             />
 
-            <View style={{top: 50, width: 250, alignSelf: 'center'}}>
+            <View style={styles.View.closeModal}>
               <Button title={'close'} onPress={hideModal} />
             </View>
           </View>
         </View>
       </Modal>
 
+      {/* Item in filters menu */}
       <View style={styles.FilterItem.item}>
         <Pressable
           style={styles.FilterItem.itemPressable}
           title={'Mode'}
           onPress={showModal}>
-          <Text
-            style={{
-              fontFamily: Theme.fontFamilyRegular,
-              color: '#000000',
-              fontSize: 16,
-            }}>
-            {props.value} m
-          </Text>
+          <Text style={styles.Text.itemText}>{props.value} m</Text>
         </Pressable>
         <Pressable style={styles.center}>
           <Ionicons

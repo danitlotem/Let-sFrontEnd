@@ -1,10 +1,8 @@
-/* eslint-disable no-alert */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-unused-vars */
-// import UplaodImageModal from '../Components/uploadImageModal';
-import React, {useEffect, useRef, useState} from 'react';
-import {View, Text, Image, Pressable} from 'react-native';
+import React, {useEffect, useCallback} from 'react';
+import {View, Text, ImageBackground, Pressable, Dimensions} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import styles from '../Styles/newHomeStyle';
 import axios from 'axios';
@@ -22,11 +20,17 @@ const Home = () => {
   const navigation = useNavigation();
   const path = getCurrentPath();
 
-  const myLongitude = useSelector(state => state.general.myLongitude);
-  const myLatitude = useSelector(state => state.general.myLatitude);
-  const text = useSelector(state => state.general.rawText);
-  const data = text?.filters.Search_Mode;
-  const myUserId = useSelector(state => state.configuration.userConfig.user_id);
+  const status = useSelector(state => state.general?.status);
+  const myLongitude = useSelector(state => state.general?.myLongitude);
+  const myLatitude = useSelector(state => state.general?.myLatitude);
+
+  const refresh = useSelector(state => state.general?.refresh);
+  const text = useSelector(state => state.general?.rawText);
+  const data = useSelector(state => state.general.rawText.filters?.Search_Mode);
+  const myUserId = useSelector(
+    state => state.configuration.userConfig?.user_id,
+  );
+  const verifyToken = useSelector(state => state.configuration?.token);
   const users = useSelector(state => state.people.usersBySearchModes);
   const HobText = text['Search Mode Sentences'];
 
@@ -38,13 +42,19 @@ const Home = () => {
     interested_in_filter: 'Interested in',
     age_filter: [],
     radius_filter: 1000,
-    friends_only_filter: 0,
+    friends_only_filter: false,
+    online_filter: true,
   };
 
-  const getUsersBySearchModes = async () => {
+  const getUsersBySearchModes = useCallback(async () => {
     try {
       const usersBySearchModes = await axios.get(
         `${path}/dataFromSetsToClient/experience/${myUserId}`,
+        {
+          headers: {
+            Authorization: 'Bearer ' + verifyToken,
+          },
+        },
       );
       dispatch(
         updateUsersBySearchModes({usersBySearchModes: usersBySearchModes.data}),
@@ -52,11 +62,11 @@ const Home = () => {
     } catch (err) {
       console.error(err);
     }
-  };
+  });
 
   useEffect(() => {
-    getUsersBySearchModes();
-  }, [myLongitude, myLatitude]);
+    if (status === 'connected') getUsersBySearchModes();
+  }, [myLongitude, myLatitude, refresh]);
 
   const getImages = item => {
     if (item === 'Chill') return require(`../assets/Images/Hangout.jpg`);
@@ -83,21 +93,21 @@ const Home = () => {
 
   const surpriseMeIndex = max => {
     let index = Math.floor(Math.random() * max);
-    while (data[index] === 'Surprise') {
+    while (data[index] === 'Surprise' || data[index] === 'Whatever') {
       index = Math.floor(Math.random() * max);
     }
-    return index; //FIX ME
+    return index;
   };
   const getFunction = async item => {
     if (item !== 'Surprise') {
       initialFilter = {...initialFilter, search_mode_filter: item};
     } else {
-      const mode = data[surpriseMeIndex(data.length)]; //FIX ME - check whatever not choose
+      const mode = data[surpriseMeIndex(data.length)];
       initialFilter = {
         ...initialFilter,
         search_mode_filter: mode,
       };
-      alert(`your mode is ${mode}`);
+      console.error(`your mode is ${mode}`);
     }
     dispatch(updateFilters({filters: initialFilter}));
     navigation.navigate('Nearby People');
@@ -110,56 +120,55 @@ const Home = () => {
       </View>
       <SwiperFlatList
         showPagination
-        vertical={true}
-        index={0}
         PaginationComponent={() => (
           <View style={styles.View.upArrowContainer}>
-            <Ionicons color={'#FFFFFF'} size={25} name={'arrow-up-outline'} />
+            <Ionicons
+              color={'#FFFFFF'}
+              size={25}
+              name={'arrow-forward-outline'}
+            />
           </View>
-        )}>
-        <View style={styles.View.innterContainer}>
-          {data.map((item, index) => (
-            <View style={{backgroundColor: Theme.backgroundColor}} key={index}>
-              <Image style={styles.child} source={getImages(item)} />
-
-              <View style={styles.View.getTextContainer}>
-                {getText(item)}
-                {item !== 'Surprise' ? (
-                  <View style={styles.View.bottomContainer}>
-                    <Ionicons
-                      color={'#FFFFFF'}
-                      size={20}
-                      name={'people-outline'}
-                    />
-                    <Text style={styles.Text.peopleInTheArea}>
-                      {' '}
-                      {item === 'Grab A Bite'
-                        ? users.Grab_A_Bite?.length
-                        : users[item]?.length}{' '}
-                      online people in the area
-                    </Text>
-                  </View>
-                ) : (
-                  <View />
-                )}
-                <Pressable
-                  onPress={() => getFunction(item)}
-                  style={styles.Pressable.checkItOut}
-                  color={'blue'}>
-                  <Text
-                    adjustsFontSizeToFit
-                    style={{
-                      color: '#FFFFFF',
-                      fontFamily: Theme.fontFamilyRegular,
-                    }}>
-                    Check it out
+        )}
+        data={data}
+        renderItem={({item}) => (
+          <ImageBackground
+            resizeMode="cover"
+            style={styles.child}
+            source={getImages(item)}>
+            <View style={styles.View.getTextContainer}>
+              {getText(item)}
+              {item !== 'Surprise' ? (
+                <View style={styles.View.bottomContainer}>
+                  <Ionicons
+                    color={'#FFFFFF'}
+                    size={20}
+                    name={'people-outline'}
+                  />
+                  <Text style={styles.Text.peopleInTheArea}>
+                    {' '}
+                    {users[item]?.length} online people in the area
                   </Text>
-                </Pressable>
-              </View>
+                </View>
+              ) : (
+                <View />
+              )}
+              <Pressable
+                onPress={() => getFunction(item)}
+                style={styles.Pressable.checkItOut}
+                color={'blue'}>
+                <Text
+                  adjustsFontSizeToFit
+                  style={{
+                    color: '#FFFFFF',
+                    fontFamily: Theme.fontFamilyRegular,
+                  }}>
+                  Check it out
+                </Text>
+              </Pressable>
             </View>
-          ))}
-        </View>
-      </SwiperFlatList>
+          </ImageBackground>
+        )}
+      />
     </View>
   );
 };

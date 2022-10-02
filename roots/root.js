@@ -8,7 +8,6 @@ import SignUp1 from '../Screens/SignUp/SignUp1';
 import SignUp2 from '../Screens/SignUp/SignUp2';
 import SignUp3 from '../Screens/SignUp/SignUp3';
 import SignUp4 from '../Screens/SignUp/SignUp4';
-import UplaodImageModal from '../Components/uploadImageModal';
 import newHome from '../Screens/newHome';
 import MyFriends from '../Screens/MyFriends';
 import MyProfile from '../Screens/MyProfile';
@@ -16,7 +15,6 @@ import CustomSidebarMenu from '../Screens/Menu';
 import NearbyPeople from '../Screens/NearbyPeople';
 import Chats from '../Screens/Chats';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Settings from '../Screens/Settings';
 import Notifications from '../Screens/Notifications';
 import FiltersBar from '../Screens/Filters';
 import Conversation from '../Screens/Conversation';
@@ -41,9 +39,8 @@ const SignUpStack = [
 const loggingToAppScreens = [
   {title: 'Log In stack', screen: LogIn},
   {title: 'newHome', screen: newHome, icon: 'home-outline'},
-  // {title: 'newHobbies', screen: newHobbies, icon: 'home-outline'},
   {title: 'SignUp', screen: SignUpScreen},
-  {title: 'UplaodImageModal', screen: UplaodImageModal},
+  {title: 'UploadPictures', screen: SignUp4},
   {title: 'HomeStack', screen: DrawerNavi},
 ];
 
@@ -66,7 +63,7 @@ const DrawerScreens = [
     screen: ChatsAndConvScreen,
     icon: 'chatbox-ellipses-outline',
   },
-  {title: 'Settings', screen: Settings, icon: 'settings-outline'},
+  {title: 'UploadPictures', screen: SignUp4, icon: 'image-outline'},
 ];
 
 function FiltersBarScreen() {
@@ -117,16 +114,26 @@ const DrawerItems = DrawerScreens.map(item => {
       name={item.title}
       key={item.title}
       component={item.screen}
-      options={{
-        drawerLabelStyle: {
-          fontFamily: Theme.fontFamilyBold,
-          color: Theme.secondColor,
-        },
-        activeBackgroundColor: {backgroundColor: '#316172'},
-        drawerIcon: () => (
-          <Ionicons color={Theme.secondColor} name={item.icon} size={22} />
-        ),
-      }}
+      options={
+        item.title !== 'My Profile' && item.title !== 'UploadPictures'
+          ? {
+              drawerLabelStyle: {
+                fontFamily: Theme.fontFamilyBold,
+                color: Theme.secondColor,
+              },
+              activeBackgroundColor: {backgroundColor: '#316172'},
+              drawerIcon: () => (
+                <Ionicons
+                  color={Theme.secondColor}
+                  name={item.icon}
+                  size={22}
+                />
+              ),
+            }
+          : {
+              drawerItemStyle: {display: 'none'},
+            }
+      }
     />
   );
 });
@@ -138,6 +145,7 @@ function SignUpScreen() {
     </chatsAndConvScreenStack.Navigator>
   );
 }
+
 function ChatsAndConvScreen() {
   return (
     <chatsAndConvScreenStack.Navigator screenOptions={{headerShown: false}}>

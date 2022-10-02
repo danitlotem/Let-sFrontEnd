@@ -18,17 +18,16 @@ const styles = StyleSheet.create({
     margin: 5,
     alignSelf: 'center',
     borderRadius: 5,
-    width: '75%',
+    width: '70%',
     elevation: 5,
   },
   itemPressable: {
     justifyContent: 'center',
-    width: 160,
+    width: 150,
   },
   item: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // width: 140,
   },
   valueItemText: {
     fontSize: 16,
@@ -36,7 +35,6 @@ const styles = StyleSheet.create({
     fontFamily: Theme.fontFamilyRegular,
   },
 
-  //////Modal
   Item: {
     padding: 20,
     elevation: 10,

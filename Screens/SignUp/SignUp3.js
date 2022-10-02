@@ -2,16 +2,18 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-prototype-builtins */
-/* eslint-disable no-alert */
-import React, {useState} from 'react';
+import React from 'react';
 import {View, Text, ScrollView, Button, Pressable, Image} from 'react-native';
 import styles from '../../Styles/SignUpStyle';
 import Theme from '../../Styles/Theme';
 import axios from 'axios';
 import {useSelector, useDispatch} from 'react-redux';
+import {
+  updateUserId,
+  updateConfiguration,
+  updateHobbies,
+} from '../../store/Slices/configurationSlice';
 import {updateDetails} from '../../store/Slices/configurationSlice';
-import {updateConfiguration} from '../../store/Slices/configurationSlice';
-import {updateHobbies} from '../../store/Slices/configurationSlice';
 import {
   Collapse,
   CollapseHeader,
@@ -22,9 +24,10 @@ import {getCurrentPath} from '../../utils/generalFunctions';
 const SignUp3 = ({route, navigation}) => {
   const path = getCurrentPath();
   const dispatch = useDispatch();
-  const myHobbies = useSelector(state => state.configuration.myHobbies);
-  const hobbies = useSelector(state => state.general.rawText.Hobbies);
-  const signUpConfig = useSelector(state => state.configuration.signUpConfig);
+  const myHobbies = useSelector(state => state.configuration?.myHobbies);
+  const hobbies = useSelector(state => state.general.rawText?.Hobbies);
+  const signUpConfig = useSelector(state => state.configuration?.signUpConfig);
+
   const getImages = item => {
     if (item === 'Sport')
       return require(`../../assets/Images/Hobbies/Hobbie-Sport.jpg`);
@@ -44,7 +47,6 @@ const SignUp3 = ({route, navigation}) => {
       return require(`../../assets/Images/Hobbies/Hobbie-Indoor.jpg`);
   };
 
-  let configuration = {hobbies: [...myHobbies]};
   const hobbiesListItemStyle = title => {
     if (title === 'Cancel') return {marginTop: 3, backgroundColor: 'red'};
     return {
@@ -56,29 +58,45 @@ const SignUp3 = ({route, navigation}) => {
         : 'transparent',
     };
   };
-  const updateState = () => {
-    dispatch(updateConfiguration({signUpConfig: {...configuration}}));
-  };
-  const AddUserToDB = async event => {
+
+  //NOTICE: The function handles adding users to the database
+  const AddUserToDB = async () => {
     try {
-      const response = await axios.post(`${path}/auth/register`, signUpConfig);
-      if (response.data.hasOwnProperty('msg')) {
-        alert(response.data.msg);
+      dispatch(updateConfiguration({signUpConfig: {hobbies: myHobbies}}));
+      const response = await axios.post(`${path}/auth/register`, {
+        ...signUpConfig,
+        hobbies: myHobbies,
+      });
+      if (!response.data.hasOwnProperty('user_id')) {
+        console.error(response.data.msg);
+        return false;
       } else {
-        let loginDetails = {
-          userConfig: response.data, //BUG!!!! response.data is status and not db
-          email: response.data.email,
-          fullName: `${response.data.first_name} ${response.data.last_name}`,
-          token: response.data.token,
-        };
-        console.log('response.data:', response.data);
-        console.log('TEst:', loginDetails);
-        dispatch(updateDetails(loginDetails));
+        dispatch(updateUserId({user_id: response.data.user_id}));
+        const getUser = await axios.get(
+          `${path}/userConfiguration/${response.data.user_id}`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + response.data.token,
+            },
+          },
+        );
+        dispatch(
+          updateDetails({
+            userConfig: getUser.data[0],
+            email: response.data.email,
+            fullName: `${getUser.data[0].first_name} ${getUser.data[0].last_name}`,
+            token: response.data.token,
+          }),
+        );
+        return true;
       }
     } catch (error) {
-      alert(error);
+      console.error(error);
+      return false;
     }
   };
+
+  //NOTICE: The function handles adding and removing hobbies from the list and update the state
   const addToList = val => {
     if (myHobbies.includes(val) === true) {
       const temp = myHobbies.filter(hobbie => hobbie !== val);
@@ -137,9 +155,10 @@ const SignUp3 = ({route, navigation}) => {
             color="#48D1CC"
             title="Continue"
             onPress={async () => {
-              updateState();
-              await AddUserToDB();
-              navigation.navigate('SignUp4');
+              const res = await AddUserToDB();
+              if (res) {
+                navigation.navigate('SignUp4', {page: 'SignUp3'});
+              }
             }}
           />
         </View>
